@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Subject — ASCEND</title>
+  <meta name="description" content="All resources for this subject.">
+  <link rel="stylesheet" href="style.css"><link rel="stylesheet" href="pages.css"><link rel="stylesheet" href="explore.css">
+  <meta property="og:title" content="Subject — ASCEND">
+  <meta property="og:image" content="New_Logo_Top.png">
+</head>
+<body>
+<div id="navbar-root"></div><div id="breadcrumb-root"></div>
+<section class="subject-page"><div class="container">
+  <div class="subject-header fade-up">
+    <div><h1 class="subject-title" id="sub-title"></h1>
+      <div class="subject-badges" id="sub-badges"></div></div>
+    <button class="bookmark-btn" id="bookmark-btn" aria-label="Bookmark">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+  </div>
+  <div class="subject-tabs fade-up fade-up-delay-1" id="subject-tabs"></div>
+  <div class="subject-content">
+    <div class="tab-panel active" id="panel-overview">
+      <div class="subject-layout fade-up"><div class="subject-main">
+        <div class="subject-about"><h3>About this subject</h3><p id="sub-desc"></p></div>
+        <div class="subject-links" id="sub-links"></div>
+        <div class="subject-top-resources"><h3>Top Resources</h3>
+          <div class="top-res-list" id="top-res-list"></div>
+          <a href="#" class="view-all-link" id="view-all-link">View all resources →</a></div>
+      </div><div class="subject-sidebar"><div class="stats-card">
+        <h4>Subject Info</h4>
+        <div class="stats-list" id="stats-list"></div>
+      </div></div></div>
+    </div>
+    <div class="tab-panel" id="panel-resources"><div class="res-list-container fade-up" id="res-list-container"></div></div>
+    <div class="tab-panel" id="panel-summaries"><div class="summary-redirect fade-up">
+      <p>View the complete chapter-wise summary and important topics.</p>
+      <a href="#" class="btn-primary" id="summary-link">Open Summary & Important Topics
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+    </div></div>
+  </div>
+</div></section>
+<div id="footer-root"></div>
+<script src="js/data.js"></script><script src="js/app.js"></script>
+<script>
+(function(){
+  const courseId = getParam('course')||'core', semId = getParam('sem')||'1', subId = getParam('sub')||'financial-accounting';
+  const course = getCourse(courseId), sem = getSemester(courseId,semId), sub = getSubject(courseId,semId,subId);
+  if (!course||!sem||!sub) { window.location.href = `semester?course=${courseId}&id=${semId}`; return; }
+
+  document.title = `${sub.name} — ASCEND`;
+  createNavbar('courses'); createFooter();
+  document.getElementById('breadcrumb-root').innerHTML = createBreadcrumb([
+    {label:'Home',href:'index.html'},{label:'Courses',href:'courses.html'},
+    {label:course.name,href:`semesters?course=${courseId}`},
+    {label:sem.name,href:`semester?course=${courseId}&id=${semId}`},{label:sub.name}
+  ]);
+
+  document.getElementById('sub-title').textContent = sub.name;
+  document.getElementById('sub-desc').textContent = sub.description || `${sub.name} — ${sem.name}, ${course.name}.`;
+  document.getElementById('sub-badges').innerHTML = `
+    <span class="subject-sem-tag">${course.name}</span>
+    <span class="subject-sem-tag">${sem.name}</span>
+    <span class="subject-sem-tag">${sub.credits} Credit${sub.credits>1?'s':''} · ${sub.maxMarks} Marks</span>
+    <span class="subject-sem-tag">CA: ${sub.ca} | TEE: ${sub.tee}</span>
+    <span class="subject-sem-tag ${sub.examType}">${sub.tee===0 ? 'Fully Internal' : 'External'}</span>`;
+
+  // Build tabs based on exam type
+  const tabs = document.getElementById('subject-tabs');
+  const isExternal = sub.examType === 'external';
+  let tabHTML = '<button class="tab-btn active" data-tab="overview">Overview</button>';
+  if (isExternal) {
+    tabHTML += '<button class="tab-btn" data-tab="midSem">Mid Sem</button>';
+    tabHTML += '<button class="tab-btn" data-tab="endSem">End Sem</button>';
+  }
+  tabHTML += '<button class="tab-btn" data-tab="assignments">Assignments</button>';
+  tabHTML += '<button class="tab-btn" data-tab="notes">Notes</button>';
+  tabHTML += '<button class="tab-btn" data-tab="prepVideos">Prep Videos</button>';
+  tabHTML += '<button class="tab-btn" data-tab="summaries">Summary & Important Topics</button>';
+  tabs.innerHTML = tabHTML;
+
+  // Stats
+  const statsEl = document.getElementById('stats-list');
+  const info = [
+    {l:'Course',v:course.name},{l:'Semester',v:sem.name},
+    {l:'Credits',v:sub.credits},{l:'Total Marks',v:sub.maxMarks},
+    {l:'Continuous Assessment (CA)',v:sub.ca},
+    {l:'Term End Exam (TEE)',v:sub.tee},
+    {l:'Exam Type',v:sub.tee===0?'Fully Internal (No End Sem)':'External (End Sem)'},
+    {l:'Category',v:sub.category.charAt(0).toUpperCase()+sub.category.slice(1)}
+  ];
+  if (!sub.specializations.includes('all')) info.push({l:'Specialization',v:sub.specializations.map(s=>s.toUpperCase()).join(', ')});
+  statsEl.innerHTML = info.map(d=>`<div class="stat-row"><span>${d.l}</span><span class="stat-val">${d.v}</span></div>`).join('');
+
+  // Top resources & tabs logic
+  const allRes = RESOURCES[subId];
+  const topRes = document.getElementById('top-res-list');
+  if (allRes) {
+    const topItems = [];
+    Object.entries(allRes).forEach(([cat,items]) => items.slice(0,1).forEach(r => topItems.push({...r,cat})));
+    topItems.slice(0,3).forEach(r => {
+      const isVid = r.cat==='prepVideos';
+      const href = isVid ? `video?course=${courseId}&sem=${semId}&sub=${subId}&id=${r.id}` : `resource?course=${courseId}&sem=${semId}&sub=${subId}&id=${r.id}`;
+      topRes.innerHTML += `<a href="${href}" class="top-res-item">
+        <div class="resource-type-icon ${resTypeClass(r.cat)}">${resTypeShort(r.cat)}</div>
+        <div class="top-res-info"><div class="top-res-title">${r.title}</div><div class="top-res-meta">${sem.name} · ${r.fileType}</div></div>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></a>`;
+    });
+  }
+
+  // Tab switching
+  const panelOverview = document.getElementById('panel-overview');
+  const panelResources = document.getElementById('panel-resources');
+  const panelSummaries = document.getElementById('panel-summaries');
+  const resContainer = document.getElementById('res-list-container');
+  const resTabs = isExternal ? ['midSem','endSem','assignments','notes','prepVideos'] : ['assignments','notes','prepVideos'];
+
+  function showTab(tabId) {
+    tabs.querySelectorAll('.tab-btn').forEach(t=>t.classList.toggle('active',t.dataset.tab===tabId));
+    panelOverview.classList.toggle('active',tabId==='overview');
+    panelSummaries.classList.toggle('active',tabId==='summaries');
+    const isResTab = resTabs.includes(tabId);
+    panelResources.classList.toggle('active',isResTab);
+    if (isResTab && allRes) {
+      const items = allRes[tabId]||[];
+      if (!items.length) { resContainer.innerHTML = renderEmptyState('No resources yet for this category. Be the first to contribute!', true); return; }
+      resContainer.innerHTML = items.map(r => {
+        const isVid = tabId==='prepVideos';
+        const href = isVid ? `video?course=${courseId}&sem=${semId}&sub=${subId}&id=${r.id}` : `resource?course=${courseId}&sem=${semId}&sub=${subId}&id=${r.id}`;
+        return `<a href="${href}" class="resource-item"><div class="resource-info">
+          <div class="resource-type-icon ${resTypeClass(tabId)}">${resTypeShort(tabId)}</div>
+          <div class="resource-details"><div class="resource-title">${r.title}</div>
+          <div class="resource-meta"><span>${sem.name}</span> <span>·</span> <span>${resTypeLabel(tabId)}</span>${r.duration?` <span>·</span> <span>${r.duration}</span>`:''}</div></div></div>
+          <div class="resource-badge">${r.fileType}</div><div class="resource-date">${r.date}</div></a>`;
+      }).join('');
+    } else if (isResTab) {
+      resContainer.innerHTML = renderEmptyState('No resources available for this subject yet.', true);
+    }
+  }
+  tabs.querySelectorAll('.tab-btn').forEach(t=>t.addEventListener('click',()=>showTab(t.dataset.tab)));
+  document.getElementById('summary-link').href = `summary?course=${courseId}&sem=${semId}&sub=${subId}`;
+  document.getElementById('view-all-link').addEventListener('click',e=>{e.preventDefault();showTab(isExternal?'endSem':'notes');});
+  document.getElementById('bookmark-btn').addEventListener('click',function(){this.classList.toggle('bookmarked');this.querySelector('svg').setAttribute('fill',this.classList.contains('bookmarked')?'currentColor':'none');});
+  initPage();
+})();
+</script>
+</body>
+</html>

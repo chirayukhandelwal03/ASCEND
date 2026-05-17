@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prep Video — ASCEND</title>
+  <meta name="description" content="Watch preparation video resource.">
+  <link rel="stylesheet" href="style.css"><link rel="stylesheet" href="pages.css"><link rel="stylesheet" href="explore.css">
+  <meta property="og:title" content="Prep Video — ASCEND">
+  <meta property="og:image" content="New_Logo_Top.png">
+</head>
+<body>
+<div id="navbar-root"></div><div id="breadcrumb-root"></div>
+<section class="video-page"><div class="container">
+  <div class="video-header fade-up"><span class="video-tag">Prep Video</span><span class="video-upload-date" id="vid-date"></span></div>
+  <h1 class="video-title fade-up fade-up-delay-1" id="vid-title"></h1>
+  <div class="video-layout">
+    <div class="video-player-wrapper fade-up fade-up-delay-1">
+      <div class="video-player"><img src="hero-desk.png" alt="Video" class="video-thumbnail">
+        <div class="video-overlay"><div class="video-overlay-text" id="vid-ot"></div><div class="video-overlay-subtitle" id="vid-os"></div></div>
+        <button class="video-play-btn" aria-label="Play"><svg width="48" height="48" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
+        <div class="video-controls"><div class="video-progress"><div class="video-progress-bar" style="width:0%"></div></div><div class="video-controls-row"><div class="vc-left"><button class="vc-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"/></svg></button><span class="vc-time">0:00 / <span id="vid-dur">15:32</span></span></div><div class="vc-right"><button class="vc-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/></svg></button></div></div></div>
+      </div>
+      <div class="video-description"><h3>Description</h3><p id="vid-desc"></p></div>
+      <div class="video-topics"><h3>Topics Covered</h3><div class="topic-tags" id="topic-tags"></div></div>
+    </div>
+    <div class="video-sidebar fade-up fade-up-delay-2">
+      <div class="details-card"><h4>About</h4><div class="detail-list" id="vid-details"></div></div>
+      <a href="https://youtube.com" target="_blank" class="btn-youtube"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3.02 3.02 0 0 0-2.12-2.14C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.38.56A3.02 3.02 0 0 0 .5 6.2 31.8 31.8 0 0 0 0 12a31.8 31.8 0 0 0 .5 5.8 3.02 3.02 0 0 0 2.12 2.14c1.88.56 9.38.56 9.38.56s7.5 0 9.38-.56a3.02 3.02 0 0 0 2.12-2.14A31.8 31.8 0 0 0 24 12a31.8 31.8 0 0 0-.5-5.8zM9.6 15.6V8.4L15.84 12 9.6 15.6z"/></svg> Watch on YouTube</a>
+      <button class="share-btn" id="share-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Share</button>
+    </div>
+  </div>
+</div></section>
+<div id="footer-root"></div>
+<script src="js/data.js"></script><script src="js/app.js"></script>
+<script>
+(function(){
+  const courseId=getParam('course')||'core',semId=getParam('sem')||'1',subId=getParam('sub'),resId=getParam('id');
+  const course=getCourse(courseId),sem=getSemester(courseId,semId),sub=getSubject(courseId,semId,subId),res=resId?getResource(subId,resId):null;
+  if(!course||!sem||!sub||!res){window.location.href=`subject?course=${courseId}&sem=${semId}&sub=${subId}`;return}
+  document.title=`${res.title} — ASCEND`;
+  createNavbar('courses');createFooter();
+  document.getElementById('breadcrumb-root').innerHTML=createBreadcrumb([{label:'Home',href:'index.html'},{label:'Courses',href:'courses.html'},{label:course.name,href:`semesters?course=${courseId}`},{label:sem.name,href:`semester?course=${courseId}&id=${semId}`},{label:sub.name,href:`subject?course=${courseId}&sem=${semId}&sub=${subId}`},{label:'Prep Video'}]);
+  document.getElementById('vid-title').textContent=res.title;
+  document.getElementById('vid-date').textContent=`Uploaded on ${res.date}`;
+  document.getElementById('vid-desc').textContent=res.description;
+  document.getElementById('vid-dur').textContent=res.duration||'15:32';
+  document.getElementById('vid-ot').textContent='HOW TO PREPARE FOR';
+  document.getElementById('vid-os').textContent=sub.name.toUpperCase();
+  const details=[{l:'Author',v:res.uploadedBy},{l:'Course',v:course.name},{l:'Batch',v:res.batch},{l:'Duration',v:res.duration||'N/A'},{l:'Views',v:res.views.toLocaleString()}];
+  document.getElementById('vid-details').innerHTML=details.map(d=>`<div class="detail-row"><span class="detail-label">${d.l}</span><span class="detail-value">${d.v}</span></div>`).join('');
+  document.getElementById('topic-tags').innerHTML=(res.topics||[]).map(t=>`<span class="topic-tag">${t}</span>`).join('');
+  document.getElementById('share-btn').addEventListener('click',()=>{if(navigator.share)navigator.share({title:res.title,url:window.location.href});else{navigator.clipboard.writeText(window.location.href);alert('Link copied!')}});
+  initPage();
+})();
+</script>
+</body>
+</html>

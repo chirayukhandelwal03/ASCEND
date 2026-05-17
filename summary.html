@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Summary — ASCEND</title>
+  <meta name="description" content="Quick revision guide and topic-wise summary.">
+  <link rel="stylesheet" href="style.css"><link rel="stylesheet" href="pages.css"><link rel="stylesheet" href="explore.css">
+  <meta property="og:title" content="Summary — ASCEND">
+  <meta property="og:image" content="New_Logo_Top.png">
+</head>
+<body>
+<div id="navbar-root"></div><div id="breadcrumb-root"></div>
+<section class="summary-page"><div class="container">
+  <div class="summary-header fade-up"><h1 class="summary-title">Summary & Important Topics</h1><p class="summary-subtitle" id="sum-sub"></p></div>
+  <div class="summary-search fade-up fade-up-delay-1"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" id="sum-search" placeholder="Search in summary..." autocomplete="off"></div>
+  <div class="summary-layout fade-up fade-up-delay-2">
+    <div class="chapters-sidebar" id="chapters-sidebar"><h3>Chapters</h3><div class="chapters-list" id="chapters-list"></div></div>
+    <div class="chapter-content" id="chapter-content"><div class="chapter-placeholder"><p>Select a chapter from the sidebar.</p></div></div>
+  </div>
+  <div class="summary-download fade-up"><a href="#" class="btn-secondary" id="dl-sum"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download Summary (PDF)</a>
+    <div class="summary-nav"><button class="sum-nav-btn" id="prev-ch">← Previous</button><button class="sum-nav-btn" id="next-ch">Next Chapter →</button></div></div>
+</div></section>
+<div id="footer-root"></div>
+<script src="js/data.js"></script><script src="js/app.js"></script>
+<script>
+(function(){
+  const courseId=getParam('course')||'core',semId=getParam('sem')||'1',subId=getParam('sub');
+  const course=getCourse(courseId),sem=getSemester(courseId,semId),sub=getSubject(courseId,semId,subId);
+  if(!course||!sem||!sub){window.location.href='semesters?course='+courseId;return}
+  document.title=`Summary — ${sub.name} — ASCEND`;
+  createNavbar('courses');createFooter();
+  document.getElementById('breadcrumb-root').innerHTML=createBreadcrumb([{label:'Home',href:'index.html'},{label:'Courses',href:'courses.html'},{label:course.name,href:`semesters?course=${courseId}`},{label:sem.name,href:`semester?course=${courseId}&id=${semId}`},{label:sub.name,href:`subject?course=${courseId}&sem=${semId}&sub=${subId}`},{label:'Summary'}]);
+  document.getElementById('sum-sub').textContent=`${sub.name} — ${course.name}, ${sem.name}`;
+  const chapters=sub.chapters||[];let cur=0;
+  function renderList(){
+    document.getElementById('chapters-list').innerHTML=chapters.map((ch,i)=>`<button class="chapter-item ${i===cur?'active':''}" data-i="${i}"><span class="chapter-num">${ch.id}.</span><span class="chapter-name">${ch.title}</span></button>`).join('');
+    document.querySelectorAll('.chapter-item').forEach(b=>b.addEventListener('click',()=>{cur=parseInt(b.dataset.i);renderCh(cur);renderList()}));
+  }
+  function renderCh(i){
+    const ch=chapters[i];if(!ch)return;
+    document.getElementById('chapter-content').innerHTML=`<h2 class="chapter-title">${ch.id}. ${ch.title}</h2><div class="chapter-section"><h4>Key Concepts</h4><ul class="concepts-list">${ch.concepts.map(c=>`<li>${c}</li>`).join('')}</ul></div><div class="chapter-section"><h4>Important Topics</h4><div class="topic-tags">${ch.topics.map(t=>`<span class="topic-tag">${t}</span>`).join('')}</div></div>`;
+    document.getElementById('prev-ch').disabled=i===0;document.getElementById('next-ch').disabled=i===chapters.length-1;
+  }
+  if(chapters.length){renderList();renderCh(0)}else{document.getElementById('chapters-list').innerHTML='<p class="no-chapters">No chapters yet.</p>'}
+  document.getElementById('prev-ch').addEventListener('click',()=>{if(cur>0){cur--;renderCh(cur);renderList()}});
+  document.getElementById('next-ch').addEventListener('click',()=>{if(cur<chapters.length-1){cur++;renderCh(cur);renderList()}});
+  document.getElementById('sum-search').addEventListener('input',e=>{const q=e.target.value.toLowerCase();document.querySelectorAll('.chapter-item').forEach(it=>{it.style.display=it.querySelector('.chapter-name').textContent.toLowerCase().includes(q)||!q?'':'none'})});
+  initPage();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ASCEND — Academic Support & Curriculum Excellence Network Database</title>
+  <meta name="description" content="A centralized archive of academic resources, preparation guidance, notes, assignments, summaries, PYQs and senior insights — built by students, for future batches.">
+  <!-- 6.3 OG Meta -->
+  <meta property="og:title" content="ASCEND — Academic Resource Archive">
+  <meta property="og:description" content="A centralized archive of academic resources built by students, for future batches.">
+  <meta property="og:image" content="New_Logo_Top.png">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="ASCEND — Academic Resource Archive">
+  <meta name="twitter:description" content="Notes, PYQs, assignments, summaries & prep videos — all in one place.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="pages.css">
+  <link rel="stylesheet" href="explore.css">
+</head>
+<body>
+
+<div id="navbar-root"></div>
+
+<!-- ===== HERO ===== -->
+<section class="hero" id="hero">
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-label fade-up">Built by students. For future batches.</div>
+      <h1 class="hero-heading fade-up fade-up-delay-1">
+        Knowledge today,<br><em>legacy</em> tomorrow.
+      </h1>
+      <p class="hero-description fade-up fade-up-delay-2">
+        A centralized archive of academic resources, preparation guidance, notes, assignments, summaries, PYQs and senior insights — all in one place.
+      </p>
+      <div class="hero-buttons fade-up fade-up-delay-3">
+        <a href="courses.html" class="btn-primary" id="btn-explore-semesters">
+          Explore Courses
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="#features" class="btn-secondary" id="btn-how-works">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+          How ASCEND Works
+        </a>
+      </div>
+    </div>
+    <div class="hero-image fade-up fade-up-delay-2">
+      <img src="hero-desk.png" alt="Academic desk scene with business textbooks, notebook and pen in warm sunlight" loading="eager">
+    </div>
+  </div>
+</section>
+
+<!-- ===== PROGRAMS ===== -->
+<section class="semesters" id="semesters">
+  <div class="container">
+    <div class="section-label fade-up">Programs</div>
+    <h2 class="section-title fade-up">Choose Your MBA Program</h2>
+    <p class="section-subtitle fade-up">3 specialized programs. 4 semesters each. One unified archive.</p>
+    <div class="course-grid" id="home-course-grid"></div>
+  </div>
+</section>
+
+<!-- ===== FEATURES (3.4 — interactive links) ===== -->
+<section class="features" id="features">
+  <div class="container">
+    <div class="section-label fade-up">Resources</div>
+    <h2 class="section-title fade-up">Everything You Need, Organized for You</h2>
+    <p class="section-subtitle fade-up">Access every type of academic material in one structured archive.</p>
+    <div class="feature-grid">
+      <a href="explore?type=midSem" class="feature-card fade-up fade-up-delay-1" id="feat-midsem">
+        <div class="feature-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+        </div>
+        <div class="feature-name">Mid Sem</div>
+        <div class="feature-desc">Previous year papers & preparation</div>
+      </a>
+      <a href="explore?type=endSem" class="feature-card fade-up fade-up-delay-2" id="feat-endsem">
+        <div class="feature-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></svg>
+        </div>
+        <div class="feature-name">End Sem</div>
+        <div class="feature-desc">Previous year papers & exam preparation</div>
+      </a>
+      <a href="explore?type=assignments" class="feature-card fade-up fade-up-delay-3" id="feat-assignments">
+        <div class="feature-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/><path d="M14 9l2 2-2 2"/></svg>
+        </div>
+        <div class="feature-name">Assignments</div>
+        <div class="feature-desc">Sample assignments & guidelines</div>
+      </a>
+      <a href="explore?type=notes" class="feature-card fade-up fade-up-delay-4" id="feat-notes">
+        <div class="feature-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        </div>
+        <div class="feature-name">Notes</div>
+        <div class="feature-desc">Curated notes shared by seniors</div>
+      </a>
+      <a href="explore?type=prepVideos" class="feature-card fade-up fade-up-delay-1" id="feat-videos">
+        <div class="feature-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        </div>
+        <div class="feature-name">Prep Videos</div>
+        <div class="feature-desc">Short, high-impact preparation videos</div>
+      </a>
+      <a href="explore?type=summaries" class="feature-card fade-up fade-up-delay-2" id="feat-summary">
+        <div class="feature-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <div class="feature-name">Summary &<br>Important Topics</div>
+        <div class="feature-desc">Important topics & quick summaries</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== RECENTLY ADDED (1.1 — dynamic from data.js) ===== -->
+<section class="resources" id="resources">
+  <div class="container">
+    <div class="section-label fade-up">Archive</div>
+    <h2 class="section-title fade-up">Recently Added Resources</h2>
+    <p class="section-subtitle fade-up">The latest contributions from seniors to help you prepare better.</p>
+    <div class="resources-layout">
+      <div class="fade-up">
+        <div class="resources-header">
+          <h3>Latest Uploads</h3>
+          <a href="explore.html">View All →</a>
+        </div>
+        <div class="resource-list" id="dynamic-resource-list">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+      <!-- 5.2 Live stats sidebar -->
+      <div class="resources-quote fade-up fade-up-delay-2">
+        <img src="legacy-art.png" alt="Students walking towards a library" class="resources-quote-img" loading="lazy">
+        <div class="resources-stats-grid" id="live-stats"></div>
+        <p class="resources-quote-highlight" style="margin-top:20px;font-size:14px;">
+          Real resources. Real experiences.<br>From those who've been there.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== LEGACY / ABOUT (1.2 — rewritten) ===== -->
+<section class="legacy" id="legacy">
+  <div class="container">
+    <img src="legacy-art.png" alt="Students walking toward knowledge" class="legacy-art fade-up" loading="lazy">
+    <h2 class="legacy-title fade-up fade-up-delay-1" style="font-family:'Playfair Display',serif;font-size:28px;margin-bottom:16px;color:var(--navy);">The ASCEND Mission</h2>
+    <p class="legacy-quote fade-up fade-up-delay-1">
+      Every semester, students face the same questions: <em>What to study? Where to find resources? How did seniors prepare?</em>
+      <br><br>
+      ASCEND answers all of them — a permanent, evolving archive where every batch contributes to the next.
+      <br><br>
+      <span class="legacy-highlight">Browse → Prepare → Contribute → Leave your legacy.</span>
+    </p>
+    <div class="legacy-divider fade-up fade-up-delay-2"></div>
+  </div>
+</section>
+
+<!-- ===== TRUST BAR (3.5 — animated counters) ===== -->
+<section class="trust-bar" id="trust-bar">
+  <div class="container">
+    <div class="trust-grid" id="trust-grid">
+      <div class="trust-item fade-up fade-up-delay-1">
+        <div class="trust-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        </div>
+        <div>
+          <div class="trust-label"><span class="counter" data-target="3">0</span> Programs</div>
+          <div class="trust-desc">MBA Core, Business Analytics & IDM</div>
+        </div>
+      </div>
+      <div class="trust-item fade-up fade-up-delay-2">
+        <div class="trust-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+        <div>
+          <div class="trust-label"><span class="counter" data-target="12">0</span> Semesters</div>
+          <div class="trust-desc">4 semesters across each program</div>
+        </div>
+      </div>
+      <div class="trust-item fade-up fade-up-delay-3">
+        <div class="trust-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div>
+          <div class="trust-label"><span class="counter" data-target="0" id="counter-subjects">0</span>+ Subjects</div>
+          <div class="trust-desc">Covering every subject across all courses</div>
+        </div>
+      </div>
+      <div class="trust-item fade-up fade-up-delay-4">
+        <div class="trust-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        </div>
+        <div>
+          <div class="trust-label">Always Evolving</div>
+          <div class="trust-desc">Growing stronger with every contribution</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div id="footer-root"></div>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script>
+(function() {
+  createNavbar('home'); createFooter();
+
+  // 6.2 DRY course cards
+  const grid = document.getElementById('home-course-grid');
+  COURSES.forEach((c,i) => { grid.innerHTML += renderCourseCard(c, i); });
+
+  // 1.1 Dynamic resources from data.js — only show resources with actual content
+  const resList = document.getElementById('dynamic-resource-list');
+  const allResWithContent = getAllResources({onlyWithContent:true});
+  if(allResWithContent.length === 0){
+    resList.innerHTML = `<div class="empty-state" style="padding:32px 16px;">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--gray-300)" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      <p class="empty-state-text">Resources coming soon — be the first to contribute!</p></div>`;
+  } else {
+    allResWithContent.sort((a,b) => new Date(b.date) - new Date(a.date)).slice(0,5).forEach((r,i) => {
+      resList.innerHTML += `<a href="resource?course=${r.course}&sem=${r.semester}&sub=${r.subjectId}&id=${r.id}" class="resource-item" id="res-${i+1}">
+        <div class="resource-info">
+          <div class="resource-type-icon ${resTypeClass(r.resourceType)}">${resTypeShort(r.resourceType)}</div>
+          <div class="resource-details">
+            <div class="resource-title">${r.title}</div>
+            <div class="resource-meta"><span>${resTypeLabel(r.resourceType)}</span> <span>•</span> <span>${r.fileType}</span></div>
+          </div>
+        </div>
+        <div class="resource-badge">${r.fileType}</div>
+        <div class="resource-date">${r.date}</div>
+      </a>`;
+    });
+  }
+
+  // 5.2 Live stats sidebar — only count resources with content
+  const statsEl = document.getElementById('live-stats');
+  let totalSubjects = 0, totalResources = allResWithContent.length;
+  COURSES.forEach(c => c.semesters.forEach(s => totalSubjects += s.subjects.length));
+  statsEl.innerHTML = `
+    <div class="stat-card"><div class="stat-num">${COURSES.length}</div><div class="stat-lbl">Programs</div></div>
+    <div class="stat-card"><div class="stat-num">${totalSubjects}</div><div class="stat-lbl">Subjects</div></div>
+    <div class="stat-card"><div class="stat-num">${COURSES.reduce((a,c)=>a+c.semesters.length,0)}</div><div class="stat-lbl">Semesters</div></div>
+    <div class="stat-card"><div class="stat-num">${totalResources}</div><div class="stat-lbl">Resources</div></div>`;
+
+  // 3.5 Counter for trust bar
+  document.getElementById('counter-subjects').setAttribute('data-target', totalSubjects);
+
+  initPage();
+
+  // 3.5 Animated stat counters
+  const counterObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if(e.isIntersecting){
+        e.target.querySelectorAll('.counter').forEach(c => {
+          const target = parseInt(c.getAttribute('data-target'));
+          if(target === 0) return;
+          let current = 0;
+          const step = Math.max(1, Math.ceil(target / 40));
+          const timer = setInterval(() => {
+            current += step;
+            if(current >= target){ current = target; clearInterval(timer); }
+            c.textContent = current;
+          }, 30);
+        });
+        counterObs.unobserve(e.target);
+      }
+    });
+  }, {threshold: 0.3});
+  counterObs.observe(document.getElementById('trust-grid'));
+
+  // Resource item hover
+  document.querySelectorAll('.resource-item').forEach(item => {
+    item.addEventListener('mouseenter', () => item.style.transform = 'translateX(4px)');
+    item.addEventListener('mouseleave', () => item.style.transform = '');
+  });
+})();
+</script>
+</body>
+</html>

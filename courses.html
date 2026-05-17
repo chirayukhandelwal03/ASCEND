@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Choose Your Program — ASCEND</title>
+  <meta name="description" content="Choose from MBA Core, MBA Business Analytics, or MBA Infrastructure Development Management.">
+  <meta property="og:title" content="Choose Your Program — ASCEND">
+  <meta property="og:description" content="Select your MBA program to access semester-wise academic resources.">
+  <meta property="og:image" content="New_Logo_Top.png">
+  <meta name="twitter:card" content="summary">
+  <link rel="stylesheet" href="style.css"><link rel="stylesheet" href="pages.css"><link rel="stylesheet" href="explore.css">
+</head>
+<body>
+<div id="navbar-root"></div>
+<div id="breadcrumb-root"></div>
+
+<section class="page-header" id="page-header">
+  <div class="container">
+    <h1 class="page-title fade-up">Choose Your Program</h1>
+    <p class="page-subtitle fade-up fade-up-delay-1">Select your MBA program to access semester-wise academic resources.</p>
+  </div>
+</section>
+
+<section class="courses-section">
+  <div class="container">
+    <div class="course-grid" id="course-grid"></div>
+  </div>
+</section>
+
+<section class="course-comparison fade-up">
+  <div class="container">
+    <h2 class="section-title" style="font-size:24px;margin-bottom:32px;">Program Comparison</h2>
+    <div class="comparison-table-wrap">
+      <table class="comparison-table" id="comparison-table">
+        <thead><tr><th></th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="cta-banner">
+  <div class="container">
+    <div class="cta-banner-content fade-up">
+      <div class="cta-banner-text">
+        <h3>Not sure where to start?</h3>
+        <p>Begin with MBA (Core) Semester 1. Every journey starts with a strong foundation.</p>
+        <a href="semesters?course=core" class="btn-primary">Start with MBA (Core) <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      </div>
+      <div class="cta-banner-image"><img src="legacy-art.png" alt="Students" loading="lazy"></div>
+    </div>
+  </div>
+</section>
+
+<div id="footer-root"></div>
+<script src="js/data.js"></script><script src="js/app.js"></script>
+<script>
+createNavbar('courses'); createFooter();
+document.getElementById('breadcrumb-root').innerHTML = createBreadcrumb([{label:'Home',href:'index.html'},{label:'Courses'}]);
+
+// 6.2 DRY course cards
+const grid = document.getElementById('course-grid');
+COURSES.forEach((c,i) => { grid.innerHTML += renderCourseCard(c, i); });
+
+// Comparison table
+const thead = document.querySelector('.comparison-table thead tr');
+const tbody = document.querySelector('.comparison-table tbody');
+COURSES.forEach(c => thead.innerHTML += `<th style="color:${c.color}">${c.shortName}</th>`);
+const rows = [
+  {label:'Full Name', fn:c=>c.fullName},
+  {label:'Semesters', fn:c=>c.semesters.length},
+  {label:'Total Subjects', fn:c=>{let n=0;c.semesters.forEach(s=>n+=s.subjects.length);return n}},
+  {label:'Specializations', fn:c=>c.specializations.length?c.specializations.map(s=>s.shortName).join(', '):'—'},
+  {label:'Sem I Credits', fn:c=>c.semesters[0].totalCredits},
+  {label:'Sem II Credits', fn:c=>c.semesters[1].totalCredits},
+  {label:'Sem III Credits', fn:c=>c.semesters[2].totalCredits},
+  {label:'Sem IV Credits', fn:c=>c.semesters[3].totalCredits},
+  {label:'Total Course Credits', fn:c=>c.semesters.reduce((sum,s)=>sum+s.totalCredits,0)}
+];
+rows.forEach(r => {
+  tbody.innerHTML += `<tr><td class="row-label">${r.label}</td>${COURSES.map(c=>`<td>${r.fn(c)}</td>`).join('')}</tr>`;
+});
+
+initPage();
+</script>
+</body>
+</html>

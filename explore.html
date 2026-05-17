@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Explore Resources — ASCEND</title>
+  <meta name="description" content="Browse, search, filter and sort all academic resources across courses, semesters and subjects.">
+  <link rel="stylesheet" href="style.css"><link rel="stylesheet" href="pages.css"><link rel="stylesheet" href="explore.css">
+  <meta property="og:title" content="Explore Resources — ASCEND">
+  <meta property="og:image" content="New_Logo_Top.png">
+</head>
+<body>
+<div id="navbar-root"></div>
+
+<section class="explore-page">
+  <div class="container">
+    <!-- Header -->
+    <div class="explore-header fade-up">
+      <h1 class="explore-title">Explore Resources</h1>
+      <p class="explore-subtitle">Browse, search, and filter all academic resources across every program.</p>
+    </div>
+
+    <!-- Search + Sort bar -->
+    <div class="explore-toolbar fade-up fade-up-delay-1">
+      <div class="explore-search">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="explore-search" placeholder="Search by title, subject, or keyword..." autocomplete="off">
+      </div>
+      <div class="explore-controls">
+        <select id="explore-sort" class="explore-select">
+          <option value="newest">Newest First</option>
+          <option value="views">Most Viewed</option>
+          <option value="downloads">Most Downloaded</option>
+          <option value="az">Title A→Z</option>
+          <option value="za">Title Z→A</option>
+        </select>
+        <div class="view-toggle">
+          <button class="view-btn active" id="view-list" aria-label="List"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></button>
+          <button class="view-btn" id="view-grid" aria-label="Grid"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Content toggle + Active filters -->
+    <div class="content-toggle-bar fade-up fade-up-delay-1">
+      <label class="content-toggle"><input type="checkbox" id="content-only-toggle"><span class="toggle-slider"></span> Show only resources with content</label>
+    </div>
+    <div class="active-filters" id="active-filters"></div>
+    <div class="results-count fade-up fade-up-delay-1" id="results-count"></div>
+
+    <div class="explore-layout">
+      <!-- Filter Sidebar -->
+      <aside class="filter-sidebar fade-up" id="filter-sidebar">
+        <div class="filter-header">
+          <h3>Filters</h3>
+          <button class="clear-all-btn" id="clear-all">Clear All</button>
+        </div>
+
+        <div class="filter-group" id="fg-course">
+          <button class="filter-group-toggle active">Course <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button>
+          <div class="filter-options open" id="fo-course"></div>
+        </div>
+
+        <div class="filter-group" id="fg-batch">
+          <button class="filter-group-toggle active">Batch Year <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button>
+          <div class="filter-options open" id="fo-batch"></div>
+        </div>
+
+        <div class="filter-group" id="fg-semester">
+          <button class="filter-group-toggle active">Semester <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button>
+          <div class="filter-options open" id="fo-semester"></div>
+        </div>
+
+        <div class="filter-group" id="fg-type">
+          <button class="filter-group-toggle active">Resource Type <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button>
+          <div class="filter-options open" id="fo-type"></div>
+        </div>
+
+        <div class="filter-group" id="fg-attempt">
+          <button class="filter-group-toggle active">Attempt <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button>
+          <div class="filter-options open" id="fo-attempt"></div>
+        </div>
+
+        <div class="filter-group" id="fg-filetype">
+          <button class="filter-group-toggle active">File Type <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button>
+          <div class="filter-options open" id="fo-filetype"></div>
+        </div>
+      </aside>
+
+      <!-- Results -->
+      <div class="explore-results" id="explore-results"></div>
+    </div>
+  </div>
+</section>
+
+<!-- Mobile filter drawer toggle -->
+<button class="mobile-filter-toggle" id="mobile-filter-btn">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+  Filters
+</button>
+
+<div id="footer-root"></div>
+<script src="js/data.js"></script><script src="js/app.js"></script>
+<script>
+(function(){
+  createNavbar('explore'); createFooter();
+
+  // Build all resources flat list
+  const allResources = getAllResources();
+
+  // State
+  const filters = { course:[], batch:[], semester:[], type:[], attempt:[], filetype:[] };
+  let searchQuery = '';
+  let sortBy = 'newest';
+  let viewMode = 'list';
+  let contentOnly = false;
+
+  // Populate filter options
+  function checkbox(group, value, label) {
+    return `<label class="filter-checkbox"><input type="checkbox" data-group="${group}" value="${value}"><span class="check-mark"></span>${label}</label>`;
+  }
+
+  document.getElementById('fo-course').innerHTML = COURSES.map(c => checkbox('course', c.id, c.name)).join('');
+  document.getElementById('fo-batch').innerHTML = ['2025-27','2024-26','2023-25','2022-24'].map(b => checkbox('batch', b, b)).join('');
+  document.getElementById('fo-semester').innerHTML = [1,2,3,4].map(s => checkbox('semester', s, `Semester ${s}`)).join('');
+  document.getElementById('fo-type').innerHTML = ['midSem','endSem','assignments','notes','prepVideos','summaries'].map(t => checkbox('type', t, resTypeLabel(t))).join('');
+  document.getElementById('fo-attempt').innerHTML = ['Main','Backlog'].map(a => checkbox('attempt', a, a)).join('');
+  document.getElementById('fo-filetype').innerHTML = ['PDF','MP4','DOCX'].map(f => checkbox('filetype', f, f)).join('');
+
+  // Filter toggle
+  document.querySelectorAll('.filter-group-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      btn.classList.toggle('active');
+      btn.nextElementSibling.classList.toggle('open');
+    });
+  });
+
+  // Checkbox change
+  document.querySelectorAll('.filter-checkbox input').forEach(cb => {
+    cb.addEventListener('change', () => {
+      const g = cb.dataset.group;
+      const v = cb.value;
+      if (cb.checked) { if (!filters[g].includes(v)) filters[g].push(v); }
+      else { filters[g] = filters[g].filter(x => x !== v); }
+      render();
+    });
+  });
+
+  // Search
+  document.getElementById('explore-search').addEventListener('input', e => { searchQuery = e.target.value.toLowerCase(); render(); });
+
+  // Sort
+  document.getElementById('explore-sort').addEventListener('change', e => { sortBy = e.target.value; render(); });
+
+  // View toggle
+  document.getElementById('view-list').addEventListener('click', () => { viewMode='list'; document.getElementById('explore-results').classList.remove('grid-view'); document.getElementById('view-list').classList.add('active'); document.getElementById('view-grid').classList.remove('active'); });
+  document.getElementById('view-grid').addEventListener('click', () => { viewMode='grid'; document.getElementById('explore-results').classList.add('grid-view'); document.getElementById('view-grid').classList.add('active'); document.getElementById('view-list').classList.remove('active'); });
+
+  // Clear all
+  document.getElementById('clear-all').addEventListener('click', () => {
+    Object.keys(filters).forEach(k => filters[k] = []);
+    searchQuery = '';
+    document.getElementById('explore-search').value = '';
+    document.querySelectorAll('.filter-checkbox input').forEach(cb => cb.checked = false);
+    render();
+  });
+
+  // Content-only toggle
+  document.getElementById('content-only-toggle').addEventListener('change', e => {
+    contentOnly = e.target.checked;
+    render();
+  });
+
+  // Mobile filter
+  document.getElementById('mobile-filter-btn').addEventListener('click', () => {
+    document.getElementById('filter-sidebar').classList.toggle('mobile-open');
+  });
+
+  // URL state
+  function readURL() {
+    const p = new URLSearchParams(window.location.search);
+    if (p.get('course')) { filters.course = p.get('course').split(','); }
+    if (p.get('sem')) { filters.semester = p.get('sem').split(','); }
+    if (p.get('type')) { filters.type = p.get('type').split(','); }
+    if (p.get('batch')) { filters.batch = p.get('batch').split(','); }
+    if (p.get('attempt')) { filters.attempt = p.get('attempt').split(','); }
+    // Sync checkboxes
+    document.querySelectorAll('.filter-checkbox input').forEach(cb => {
+      const g = cb.dataset.group;
+      cb.checked = filters[g].includes(cb.value);
+    });
+  }
+  readURL();
+
+  function render() {
+    let results = [...allResources];
+
+    // Apply filters
+    if (filters.course.length) results = results.filter(r => filters.course.includes(r.course));
+    if (filters.batch.length) results = results.filter(r => filters.batch.includes(r.batch));
+    if (filters.semester.length) results = results.filter(r => filters.semester.includes(String(r.semester)));
+    if (filters.type.length) results = results.filter(r => filters.type.includes(r.resourceType));
+    if (filters.attempt.length) results = results.filter(r => r.attempt && filters.attempt.includes(r.attempt));
+    if (filters.filetype.length) results = results.filter(r => filters.filetype.includes(r.fileType));
+    if (contentOnly) results = results.filter(r => r.driveLink);
+    if (searchQuery) results = results.filter(r => r.title.toLowerCase().includes(searchQuery) || (r.subjectId||'').includes(searchQuery));
+
+    // Sort
+    if (sortBy === 'newest') results.sort((a,b) => new Date(b.date) - new Date(a.date));
+    else if (sortBy === 'views') results.sort((a,b) => b.views - a.views);
+    else if (sortBy === 'downloads') results.sort((a,b) => b.downloads - a.downloads);
+    else if (sortBy === 'az') results.sort((a,b) => a.title.localeCompare(b.title));
+    else if (sortBy === 'za') results.sort((a,b) => b.title.localeCompare(a.title));
+
+    // Active filters chips
+    const af = document.getElementById('active-filters');
+    const chips = [];
+    Object.entries(filters).forEach(([g, vals]) => {
+      vals.forEach(v => {
+        let label = v;
+        if (g==='course') { const c = getCourse(v); label = c ? c.name : v; }
+        else if (g==='semester') label = `Sem ${v}`;
+        else if (g==='type') label = resTypeLabel(v);
+        chips.push(`<span class="filter-chip" data-group="${g}" data-value="${v}">${label} <button class="chip-remove">×</button></span>`);
+      });
+    });
+    af.innerHTML = chips.join('');
+    af.querySelectorAll('.chip-remove').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const chip = btn.parentElement;
+        const g = chip.dataset.group, v = chip.dataset.value;
+        filters[g] = filters[g].filter(x => x !== v);
+        const cb = document.querySelector(`.filter-checkbox input[data-group="${g}"][value="${v}"]`);
+        if (cb) cb.checked = false;
+        render();
+      });
+    });
+
+    // Results count
+    document.getElementById('results-count').textContent = `Showing ${results.length} of ${allResources.length} resources`;
+
+    // Render results
+    const container = document.getElementById('explore-results');
+    if (!results.length) {
+      container.innerHTML = '<div class="empty-state"><p>No resources match your filters.</p><p>Try adjusting your filters or search query.</p></div>';
+      return;
+    }
+    container.innerHTML = results.map(r => {
+      const courseName = getCourse(r.course)?.shortName || r.course;
+      const isVid = r.resourceType === 'prepVideos';
+      const href = isVid ? `video?course=${r.course}&sem=${r.semester}&sub=${r.subjectId}&id=${r.id}` : `resource?course=${r.course}&sem=${r.semester}&sub=${r.subjectId}&id=${r.id}`;
+      return `<a href="${href}" class="explore-card">
+        <div class="explore-card-type"><div class="resource-type-icon ${resTypeClass(r.resourceType)}">${resTypeShort(r.resourceType)}</div></div>
+        <div class="explore-card-body">
+          <div class="explore-card-title">${r.title}</div>
+          <div class="explore-card-meta">
+            <span class="ec-badge">${courseName}</span>
+            <span class="ec-badge">Sem ${r.semester}</span>
+            <span class="ec-badge">${resTypeLabel(r.resourceType)}</span>
+            <span class="ec-badge">${r.batch}</span>${r.attempt?`
+            <span class="ec-badge">${r.attempt}</span>`:''}
+          </div>
+        </div>
+        <div class="explore-card-stats">
+          <span>${r.views} views</span>
+          <span class="resource-badge">${r.fileType}</span>
+        </div>
+        <div class="explore-card-date">${r.date}</div>
+      </a>`;
+    }).join('');
+  }
+
+  render();
+  initPage();
+
+  // Keyboard shortcut: / to focus search
+  document.addEventListener('keydown', e => {
+    if (e.key === '/' && document.activeElement.tagName !== 'INPUT') {
+      e.preventDefault();
+      document.getElementById('explore-search').focus();
+    }
+  });
+})();
+</script>
+</body>
+</html>
