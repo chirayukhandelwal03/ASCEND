@@ -1,5 +1,5 @@
 // ===== ASCEND Shared Components v4 — Full Platform =====
-const GOOGLE_FORM_URL = "https://forms.gle/YOUR_GOOGLE_FORM_ID";
+const GOOGLE_FORM_URL = "contribute";
 const LOGO_TOP = `<img src="New_Logo_Top.png" alt="ASCEND" height="42" style="height:42px;width:auto;object-fit:contain">`;
 const LOGO_BOTTOM = `<img src="New_Logo_Bottom.png" alt="ASCEND" height="38" style="height:38px;width:auto;object-fit:contain">`;
 
@@ -30,7 +30,7 @@ function createNavbar(active) {
     {href:"courses.html",label:"Courses",id:"courses"},
     {href:"explore.html",label:"Explore",id:"explore"},
     {href:"index.html#legacy",label:"About",id:"about"},
-    {href:GOOGLE_FORM_URL,label:"Contribute",id:"contribute",ext:true}
+    {href:GOOGLE_FORM_URL,label:"Contribute",id:"contribute"}
   ];
   const nav = links.map(l => {
     const cls = l.id===active?' class="active"':'';
@@ -114,14 +114,14 @@ function createFooter() {
       <div><div class="footer-heading">Quick Links</div><ul class="footer-links">
         <li><a href="index.html">Home</a></li><li><a href="courses.html">Courses</a></li>
         <li><a href="explore.html">Explore</a></li>
-        <li><a href="${GOOGLE_FORM_URL}" target="_blank">Contribute</a></li></ul></div>
+        <li><a href="${GOOGLE_FORM_URL}">Contribute</a></li></ul></div>
       <div><div class="footer-heading">Programs</div><ul class="footer-links">
         <li><a href="semesters?course=core">MBA (Core)</a></li>
         <li><a href="semesters?course=ba">MBA (BA)</a></li>
         <li><a href="semesters?course=idm">MBA (IDM)</a></li></ul></div>
       <div><div class="footer-cta-box"><div class="footer-cta-title">Have something to share?</div>
         <p class="footer-cta-desc">Contribute resources and help future batches ascend.</p>
-        <a href="${GOOGLE_FORM_URL}" target="_blank" class="footer-cta-btn">Contribute Now
+        <a href="${GOOGLE_FORM_URL}" class="footer-cta-btn">Contribute Now
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a></div></div>
     </div><div class="footer-bottom"><span>&copy; 2025 ASCEND. All rights reserved.</span>
       <div class="footer-bottom-right">Made with purpose. Built for legacy.</div></div></div></footer>`;
@@ -162,7 +162,7 @@ function renderEmptyState(message, showContribute) {
   return `<div class="empty-state">
     <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--gray-300)" stroke-width="1.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
     <p class="empty-state-text">${message}</p>
-    ${showContribute ? `<a href="${GOOGLE_FORM_URL}" target="_blank" class="btn-primary" style="margin-top:16px;font-size:13px;padding:10px 24px">Contribute Resources <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>` : ''}
+    ${showContribute ? `<a href="${GOOGLE_FORM_URL}" class="btn-primary" style="margin-top:16px;font-size:13px;padding:10px 24px">Contribute Resources <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>` : ''}
   </div>`;
 }
 

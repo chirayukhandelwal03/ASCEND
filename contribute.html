@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contribute — ASCEND</title>
+  <meta name="description" content="Share your notes, PYQs, assignments and resources to help future batches.">
+  <link rel="stylesheet" href="style.css"><link rel="stylesheet" href="pages.css">
+  <meta property="og:title" content="Contribute — ASCEND">
+  <meta property="og:image" content="New_Logo_Top.png">
+  <style>
+    .contribute-page { padding: 100px 0 0; min-height: 100vh; }
+    .contribute-header { text-align: center; margin-bottom: 32px; }
+    .contribute-title { font-size: 2rem; font-weight: 700; color: var(--heading); margin-bottom: 8px; }
+    .contribute-subtitle { color: var(--gray-500); font-size: 1rem; max-width: 540px; margin: 0 auto; line-height: 1.6; }
+    .contribute-form-wrapper {
+      max-width: 780px; margin: 0 auto; border-radius: 16px;
+      overflow: hidden; background: var(--card-bg);
+      border: 1px solid var(--border); box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+    }
+    .contribute-form-wrapper iframe {
+      width: 100%; min-height: 1400px; border: none; display: block;
+    }
+    .contribute-info { max-width: 780px; margin: 32px auto 0; display: flex; gap: 16px; flex-wrap: wrap; }
+    .contribute-info-card {
+      flex: 1; min-width: 220px; padding: 20px 24px; border-radius: 12px;
+      background: var(--card-bg); border: 1px solid var(--border);
+    }
+    .contribute-info-card h4 { font-size: 14px; font-weight: 600; color: var(--heading); margin-bottom: 6px; }
+    .contribute-info-card p { font-size: 13px; color: var(--gray-500); line-height: 1.5; margin: 0; }
+    @media(max-width:768px) {
+      .contribute-page { padding: 80px 0 0; }
+      .contribute-title { font-size: 1.5rem; }
+      .contribute-form-wrapper iframe { min-height: 1600px; }
+      .contribute-info { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+<div id="navbar-root"></div>
+
+<section class="contribute-page">
+  <div class="container">
+    <div class="contribute-header fade-up">
+      <h1 class="contribute-title">Contribute Resources</h1>
+      <p class="contribute-subtitle">Share your notes, PYQs, assignments and other academic resources. Every contribution builds a stronger legacy for future batches.</p>
+    </div>
+    <div class="contribute-form-wrapper fade-up fade-up-delay-1">
+      <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdcsTqpvWs6N8jf_OoG-Mi8jP8NioDKekpo4WvZq9u7cqVPtA/viewform?embedded=true" frameborder="0" marginheight="0" marginwidth="0" loading="lazy">Loading form...</iframe>
+    </div>
+    <div class="contribute-info fade-up fade-up-delay-2">
+      <div class="contribute-info-card">
+        <h4>What can you share?</h4>
+        <p>Mid Sem & End Sem papers, assignments, notes, prep videos, summaries — anything that helps.</p>
+      </div>
+      <div class="contribute-info-card">
+        <h4>How does it work?</h4>
+        <p>Submit via the form above. We review, organize, and publish it on ASCEND for everyone.</p>
+      </div>
+      <div class="contribute-info-card">
+        <h4>Your identity</h4>
+        <p>Contributions can be anonymous or credited — your choice. Every bit counts.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div id="footer-root"></div>
+<script src="js/data.js"></script><script src="js/app.js"></script>
+<script>createNavbar('contribute'); createFooter(); initPage();</script>
+</body>
+</html>
