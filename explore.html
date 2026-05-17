@@ -27,7 +27,7 @@
       </div>
       <div class="explore-controls">
         <select id="explore-sort" class="explore-select">
-          <option value="newest">Newest First</option>
+          <option value="newest">Recent Batch First</option>
           <option value="views">Most Viewed</option>
           <option value="downloads">Most Downloaded</option>
           <option value="az">Title A→Z</option>
@@ -204,8 +204,8 @@
     if (contentOnly) results = results.filter(r => r.driveLink);
     if (searchQuery) results = results.filter(r => r.title.toLowerCase().includes(searchQuery) || (r.subjectId||'').includes(searchQuery));
 
-    // Sort
-    if (sortBy === 'newest') results.sort((a,b) => new Date(b.date) - new Date(a.date));
+    // Sort — default "newest" uses most recent batch first (student preference)
+    if (sortBy === 'newest') results.sort((a,b) => b.batch.localeCompare(a.batch) || a.title.localeCompare(b.title));
     else if (sortBy === 'views') results.sort((a,b) => b.views - a.views);
     else if (sortBy === 'downloads') results.sort((a,b) => b.downloads - a.downloads);
     else if (sortBy === 'az') results.sort((a,b) => a.title.localeCompare(b.title));

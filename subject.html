@@ -31,12 +31,11 @@
         <div class="stats-list" id="stats-list"></div>
       </div></div></div>
     </div>
-    <div class="tab-panel" id="panel-resources"><div class="res-list-container fade-up" id="res-list-container"></div></div>
-    <div class="tab-panel" id="panel-summaries"><div class="summary-redirect fade-up">
-      <p>View the complete chapter-wise summary and important topics.</p>
-      <a href="#" class="btn-primary" id="summary-link">Open Summary & Important Topics
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
-    </div></div>
+    <div class="tab-panel" id="panel-resources">
+      <div class="attempt-filter" id="attempt-filter"></div>
+      <div class="res-list-container fade-up" id="res-list-container"></div>
+    </div>
+    <div class="tab-panel" id="panel-summaries"><div class="summary-inline fade-up" id="summary-inline"></div></div>
   </div>
 </div></section>
 <div id="footer-root"></div>
@@ -96,7 +95,11 @@
   const topRes = document.getElementById('top-res-list');
   if (allRes) {
     const topItems = [];
-    Object.entries(allRes).forEach(([cat,items]) => items.slice(0,1).forEach(r => topItems.push({...r,cat})));
+    Object.entries(allRes).forEach(([cat,items]) => {
+      // Sort by most recent batch first
+      const sorted = [...items].sort((a,b) => b.batch.localeCompare(a.batch));
+      sorted.slice(0,1).forEach(r => topItems.push({...r,cat}));
+    });
     topItems.slice(0,3).forEach(r => {
       const isVid = r.cat==='prepVideos';
       const href = isVid ? `video?course=${courseId}&sem=${semId}&sub=${subId}&id=${r.id}` : `resource?course=${courseId}&sem=${semId}&sub=${subId}&id=${r.id}`;
@@ -112,7 +115,33 @@
   const panelResources = document.getElementById('panel-resources');
   const panelSummaries = document.getElementById('panel-summaries');
   const resContainer = document.getElementById('res-list-container');
+  const attemptFilter = document.getElementById('attempt-filter');
   const resTabs = isExternal ? ['midSem','endSem','assignments','notes','prepVideos'] : ['assignments','notes','prepVideos'];
+  let activeAttempt = 'all'; // for End Sem filter
+
+  function renderResourceList(tabId, attemptVal) {
+    if (!allRes) { resContainer.innerHTML = renderEmptyState('No resources available for this subject yet.', true); return; }
+    let items = [...(allRes[tabId]||[])];
+
+    // FIX 1: Filter by attempt for End Sem / Mid Sem
+    if (attemptVal && attemptVal !== 'all') {
+      items = items.filter(r => r.attempt === attemptVal);
+    }
+
+    // FIX 2: Sort by most recent batch first (student preference)
+    items.sort((a,b) => b.batch.localeCompare(a.batch));
+
+    if (!items.length) { resContainer.innerHTML = renderEmptyState('No resources yet for this category. Be the first to contribute!', true); return; }
+    resContainer.innerHTML = items.map(r => {
+      const isVid = tabId==='prepVideos';
+      const href = isVid ? `video?course=${courseId}&sem=${semId}&sub=${subId}&id=${r.id}` : `resource?course=${courseId}&sem=${semId}&sub=${subId}&id=${r.id}`;
+      return `<a href="${href}" class="resource-item"><div class="resource-info">
+        <div class="resource-type-icon ${resTypeClass(tabId)}">${resTypeShort(tabId)}</div>
+        <div class="resource-details"><div class="resource-title">${r.title}</div>
+        <div class="resource-meta"><span>${sem.name}</span> <span>·</span> <span>${resTypeLabel(tabId)}</span>${r.attempt?` <span>·</span> <span>${r.attempt}</span>`:''}${r.duration?` <span>·</span> <span>${r.duration}</span>`:''}</div></div></div>
+        <div class="resource-badge">${r.fileType}</div><div class="resource-date">${r.date}</div></a>`;
+    }).join('');
+  }
 
   function showTab(tabId) {
     tabs.querySelectorAll('.tab-btn').forEach(t=>t.classList.toggle('active',t.dataset.tab===tabId));
@@ -120,24 +149,61 @@
     panelSummaries.classList.toggle('active',tabId==='summaries');
     const isResTab = resTabs.includes(tabId);
     panelResources.classList.toggle('active',isResTab);
-    if (isResTab && allRes) {
-      const items = allRes[tabId]||[];
-      if (!items.length) { resContainer.innerHTML = renderEmptyState('No resources yet for this category. Be the first to contribute!', true); return; }
-      resContainer.innerHTML = items.map(r => {
-        const isVid = tabId==='prepVideos';
-        const href = isVid ? `video?course=${courseId}&sem=${semId}&sub=${subId}&id=${r.id}` : `resource?course=${courseId}&sem=${semId}&sub=${subId}&id=${r.id}`;
-        return `<a href="${href}" class="resource-item"><div class="resource-info">
-          <div class="resource-type-icon ${resTypeClass(tabId)}">${resTypeShort(tabId)}</div>
-          <div class="resource-details"><div class="resource-title">${r.title}</div>
-          <div class="resource-meta"><span>${sem.name}</span> <span>·</span> <span>${resTypeLabel(tabId)}</span>${r.duration?` <span>·</span> <span>${r.duration}</span>`:''}</div></div></div>
-          <div class="resource-badge">${r.fileType}</div><div class="resource-date">${r.date}</div></a>`;
-      }).join('');
-    } else if (isResTab) {
-      resContainer.innerHTML = renderEmptyState('No resources available for this subject yet.', true);
+
+    // FIX 1: Show Main/Backlog filter for End Sem tab
+    if (tabId === 'endSem') {
+      activeAttempt = 'all';
+      attemptFilter.innerHTML = `<div class="attempt-btns">
+        <button class="attempt-btn active" data-attempt="all">All</button>
+        <button class="attempt-btn" data-attempt="Main">Main</button>
+        <button class="attempt-btn" data-attempt="Backlog">Backlog</button>
+      </div>`;
+      attemptFilter.querySelectorAll('.attempt-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          activeAttempt = btn.dataset.attempt;
+          attemptFilter.querySelectorAll('.attempt-btn').forEach(b=>b.classList.remove('active'));
+          btn.classList.add('active');
+          renderResourceList(tabId, activeAttempt);
+        });
+      });
+    } else {
+      attemptFilter.innerHTML = '';
+    }
+
+    if (isResTab) {
+      renderResourceList(tabId, tabId==='endSem' ? activeAttempt : 'all');
+    }
+
+    // FIX 3: Inline summary content
+    if (tabId === 'summaries') {
+      renderSummaryInline();
     }
   }
+
+  // FIX 3: Render summary & important topics inline
+  function renderSummaryInline() {
+    const el = document.getElementById('summary-inline');
+    const chapters = sub.chapters || [];
+    if (!chapters.length) {
+      el.innerHTML = `<div class="empty-state" style="padding:40px 16px;">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--gray-300)" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <p class="empty-state-text">No summary or important topics available yet for this subject.</p></div>`;
+      return;
+    }
+    let html = `<div class="summary-inline-header"><h3>Chapter-wise Summary</h3><p>${sub.name} — ${chapters.length} chapter${chapters.length>1?'s':''}</p></div>`;
+    chapters.forEach(ch => {
+      html += `<div class="summary-chapter-card">
+        <div class="summary-ch-head"><span class="summary-ch-num">Chapter ${ch.id}</span><h4 class="summary-ch-title">${ch.title}</h4></div>
+        <div class="summary-ch-body">
+          <div class="summary-section"><h5>Key Concepts</h5><ul>${ch.concepts.map(c=>`<li>${c}</li>`).join('')}</ul></div>
+          <div class="summary-section"><h5>Important Topics</h5><div class="topic-tags">${ch.topics.map(t=>`<span class="topic-tag">${t}</span>`).join('')}</div></div>
+        </div>
+      </div>`;
+    });
+    el.innerHTML = html;
+  }
+
   tabs.querySelectorAll('.tab-btn').forEach(t=>t.addEventListener('click',()=>showTab(t.dataset.tab)));
-  document.getElementById('summary-link').href = `summary?course=${courseId}&sem=${semId}&sub=${subId}`;
   document.getElementById('view-all-link').addEventListener('click',e=>{e.preventDefault();showTab(isExternal?'endSem':'notes');});
   document.getElementById('bookmark-btn').addEventListener('click',function(){this.classList.toggle('bookmarked');this.querySelector('svg').setAttribute('fill',this.classList.contains('bookmarked')?'currentColor':'none');});
   initPage();
