@@ -465,6 +465,39 @@ COURSES.forEach(course => {
   });
 });
 // ── End of PYQ Generator ──
+
+// ── Wire up available PDFs ──
+// Each entry: [subjectId, resourceId, relativePath]
+const PDF_MAP = [
+  // MBA Core — Sem I — End Sem — 2024-26 Backlog
+  ["business-communication","business-communication-end-backlog-2024-26","ASCEND Resources/MBA Core/MBA Core - Sem I/MBA Core - Sem I -  End Sem - 2024-26 Back Papers/MBA Core - Sem I - Business Communication - End Sem - Backlog - 2024-26.pdf"],
+  ["business-statistics","business-statistics-end-backlog-2024-26","ASCEND Resources/MBA Core/MBA Core - Sem I/MBA Core - Sem I -  End Sem - 2024-26 Back Papers/MBA Core - Sem I - Business Statistics - End Sem - Backlog - 2024-26.pdf"],
+  ["essentials-marketing","essentials-marketing-end-backlog-2024-26","ASCEND Resources/MBA Core/MBA Core - Sem I/MBA Core - Sem I -  End Sem - 2024-26 Back Papers/MBA Core - Sem I - Essentials of Marketing Management - End Sem - Backlog - 2024-26.pdf"],
+  ["financial-accounting","financial-accounting-end-backlog-2024-26","ASCEND Resources/MBA Core/MBA Core - Sem I/MBA Core - Sem I -  End Sem - 2024-26 Back Papers/MBA Core - Sem I - Financial Accounting - End Sem - Backlog - 2024-26.pdf"],
+  ["hrm","hrm-end-backlog-2024-26","ASCEND Resources/MBA Core/MBA Core - Sem I/MBA Core - Sem I -  End Sem - 2024-26 Back Papers/MBA Core - Sem I - Human Resource Management - End Sem - Backlog - 2024-26.pdf"],
+  ["intro-financial-mgmt","intro-financial-mgmt-end-backlog-2024-26","ASCEND Resources/MBA Core/MBA Core - Sem I/MBA Core - Sem I -  End Sem - 2024-26 Back Papers/MBA Core - Sem I - Introduction to Financial Management - End Sem - Backlog - 2024-26.pdf"],
+  ["operations-research","operations-research-end-backlog-2024-26","ASCEND Resources/MBA Core/MBA Core - Sem I/MBA Core - Sem I -  End Sem - 2024-26 Back Papers/MBA Core - Sem I - Operations Research - End Sem - Backlog - 2024-26.pdf"],
+  ["organizational-behaviour","organizational-behaviour-end-backlog-2024-26","ASCEND Resources/MBA Core/MBA Core - Sem I/MBA Core - Sem I -  End Sem - 2024-26 Back Papers/MBA Core - Sem I - Organizational Behaviour - End Sem - Backlog - 2024-26.pdf"],
+  ["research-methodology","research-methodology-end-backlog-2024-26","ASCEND Resources/MBA Core/MBA Core - Sem I/MBA Core - Sem I -  End Sem - 2024-26 Back Papers/MBA Core - Sem I - Research Methodology - End Sem - Backlog - 2024-26.pdf"],
+  // MBA Core — Sem I — End Sem — 2023-25 Backlog
+  ["intro-financial-mgmt","intro-financial-mgmt-end-backlog-2023-25","ASCEND Resources/MBA Core/MBA Core - Sem I/MBA Core - Sem I -  End Sem - 2023-25 Back Papers/MBA Core - Sem I - Introduction to Financial Management - End Sem - Backlog - 2023-25.pdf"],
+  // MBA BA — Sem I — End Sem — 2024-26 Backlog
+  ["ba-business-stats","ba-business-stats-end-backlog-2024-26","ASCEND Resources/MBA BA/MBA BA - Sem I/MBA BA - Sem I -  End Sem - 2024-26 Back Papers/MBA BA - Sem I - Business Statistics - End Sem - Backlog - 2024-26.pdf"],
+  ["ba-essentials-marketing","ba-essentials-marketing-end-backlog-2024-26","ASCEND Resources/MBA BA/MBA BA - Sem I/MBA BA - Sem I -  End Sem - 2024-26 Back Papers/MBA BA - Sem I - Essentials of Marketing Management - End Sem - Backlog - 2024-26.pdf"],
+  ["ba-quant-methods","ba-quant-methods-end-backlog-2024-26","ASCEND Resources/MBA BA/MBA BA - Sem I/MBA BA - Sem I -  End Sem - 2024-26 Back Papers/MBA BA - Sem I - Quantitative Methods - End Sem - Backlog - 2024-26.pdf"],
+  ["ba-financial-accounting","ba-financial-accounting-end-backlog-2024-26","ASCEND Resources/MBA BA/MBA BA - Sem I/MBA BA - Sem I -  End Sem - 2024-26 Back Papers/MBA Core - Sem I - Financial Accounting - End Sem - Backlog - 2024-26.pdf"],
+  // MBA IDM — Sem I — End Sem — 2024-26 Backlog
+  ["idm-business-comm","idm-business-comm-end-backlog-2024-26","ASCEND Resources/MBA IDM/MBA IDM - Sem I/MBA IDM - Sem I -  End Sem - 2024-26 Back Papers/MBA IDM - Sem I - Business Communication - End Sem - Backlog - 2024-26.pdf"],
+  ["idm-business-stats","idm-business-stats-end-backlog-2024-26","ASCEND Resources/MBA IDM/MBA IDM - Sem I/MBA IDM - Sem I -  End Sem - 2024-26 Back Papers/MBA IDM - Sem I - Business Statistics - End Sem - Backlog - 2024-26.pdf"],
+  ["idm-mgmt-accounting","idm-mgmt-accounting-end-backlog-2024-26","ASCEND Resources/MBA IDM/MBA IDM - Sem I/MBA IDM - Sem I -  End Sem - 2024-26 Back Papers/MBA IDM - Sem I - Management Accounting - End Sem - Backlog - 2024-26.pdf"],
+  ["idm-org-behaviour","idm-org-behaviour-end-backlog-2024-26","ASCEND Resources/MBA IDM/MBA IDM - Sem I/MBA IDM - Sem I -  End Sem - 2024-26 Back Papers/MBA IDM - Sem I - Organizational Behaviour - End Sem - Backlog - 2024-26.pdf"],
+  ["idm-roads-highways","idm-roads-highways-end-backlog-2024-26","ASCEND Resources/MBA IDM/MBA IDM - Sem I/MBA IDM - Sem I -  End Sem - 2024-26 Back Papers/MBA IDM - Sem I - Roads, Highways and Bridges - End Sem - Backlog - 2024-26.pdf"]
+];
+PDF_MAP.forEach(([subId, resId, path]) => {
+  const res = getResource(subId, resId);
+  if (res) { res.driveLink = path; }
+});
+
 // Add chapters to Financial Accounting
 const faSub = COURSES[0].semesters[0].subjects.find(s=>s.id==="financial-accounting");
 faSub.description = "Financial Accounting is the foundation of financial literacy. It focuses on understanding, recording and reporting financial transactions.";
