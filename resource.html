@@ -54,17 +54,28 @@
   // Embed actual PDF if driveLink exists
   if (res.driveLink) {
     const isGDrive = res.driveLink.includes('drive.google.com');
-    const pdfUrl = isGDrive
+    const embedUrl = isGDrive
       ? res.driveLink.replace('/view','/preview')
       : res.driveLink;
     const iframe = document.getElementById('pdf-iframe');
-    iframe.src = pdfUrl;
+    iframe.src = embedUrl;
     iframe.style.display = 'block';
     document.getElementById('pdf-mock').style.display = 'none';
-    document.getElementById('pdf-open-tab').href = pdfUrl;
-    // Download button
-    document.getElementById('download-btn').href = pdfUrl;
-    document.getElementById('download-btn').setAttribute('download', `${res.title}.pdf`);
+    // Open in new tab — for Drive use the /view URL
+    const viewUrl = isGDrive
+      ? res.driveLink.replace('/preview','/view')
+      : res.driveLink;
+    document.getElementById('pdf-open-tab').href = viewUrl;
+    // Download button — for Drive use /export URL, for local use direct path
+    if (isGDrive) {
+      const fileId = res.driveLink.match(/\/d\/([^/]+)/)?.[1];
+      document.getElementById('download-btn').href = fileId
+        ? `https://drive.google.com/uc?export=download&id=${fileId}`
+        : viewUrl;
+    } else {
+      document.getElementById('download-btn').href = res.driveLink;
+      document.getElementById('download-btn').setAttribute('download', `${res.title}.pdf`);
+    }
   } else {
     document.getElementById('pdf-open-tab').style.display = 'none';
     document.getElementById('download-btn').style.opacity = '0.5';

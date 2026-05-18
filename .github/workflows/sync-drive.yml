@@ -1,0 +1,31 @@
+name: Sync Drive PDFs
+
+on:
+  workflow_dispatch:          # Manual "Run workflow" button
+  schedule:
+    - cron: "0 */6 * * *"    # Every 6 hours
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Sync PDFs from Google Drive
+        run: node scripts/sync-drive.mjs
+        env:
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          DRIVE_FOLDER_ID: "1HqpDdGCYyxMTlanaUXq7Pdy9KjJaNqRq"
+
+      - name: Commit & push if changed
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Auto-sync Drive PDFs [bot]"
+          file_pattern: "js/data.js"
