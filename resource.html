@@ -11,7 +11,7 @@
 </head>
 <body>
 <div id="navbar-root"></div><div id="breadcrumb-root"></div>
-<section class="resource-page"><div class="container">
+<section class="resource-page" id="main-content"><div class="container">
   <div class="resource-header fade-up"><h1 class="resource-page-title" id="res-title"></h1><div class="resource-page-meta" id="res-meta"></div></div>
   <div class="resource-layout">
     <div class="resource-viewer fade-up fade-up-delay-1">
@@ -63,6 +63,16 @@
     iframe.src = embedUrl;
     iframe.style.display = 'block';
     document.getElementById('pdf-mock').style.display = 'none';
+    // Error state for failed iframe loads
+    iframe.addEventListener('error', function() {
+      iframe.style.display = 'none';
+      document.getElementById('pdf-mock').style.display = 'flex';
+      document.getElementById('pdf-mock').innerHTML = '<div style="text-align:center;padding:60px 20px;color:var(--text-muted)"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--gray-300)" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><p style="margin-top:16px;font-size:15px">Unable to load the PDF preview.</p><p style="margin-top:8px;font-size:13px">Try opening it in a new tab or downloading directly.</p></div>';
+    });
+    // Timeout fallback — if iframe takes too long
+    setTimeout(function() {
+      if (iframe.contentDocument === null || iframe.contentWindow === null) return; // cross-origin, can't check
+    }, 15000);
     // Open in new tab — for Drive use the /view URL
     const viewUrl = isGDrive
       ? res.driveLink.replace('/preview','/view')

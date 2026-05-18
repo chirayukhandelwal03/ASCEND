@@ -11,16 +11,16 @@
 </head>
 <body>
 <div id="navbar-root"></div><div id="breadcrumb-root"></div>
-<section class="subject-page"><div class="container">
+<section class="subject-page" id="main-content"><div class="container">
   <div class="subject-header fade-up">
     <div><h1 class="subject-title" id="sub-title"></h1>
       <div class="subject-badges" id="sub-badges"></div></div>
     <button class="bookmark-btn" id="bookmark-btn" aria-label="Bookmark">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
   </div>
-  <div class="subject-tabs fade-up fade-up-delay-1" id="subject-tabs"></div>
+  <div class="subject-tabs fade-up fade-up-delay-1" id="subject-tabs" role="tablist" aria-label="Subject sections"></div>
   <div class="subject-content">
-    <div class="tab-panel active" id="panel-overview">
+    <div class="tab-panel active" id="panel-overview" role="tabpanel" aria-labelledby="tab-overview">
       <div class="subject-layout fade-up"><div class="subject-main">
         <div class="subject-about"><h3>About this subject</h3><p id="sub-desc"></p></div>
         <div class="subject-links" id="sub-links"></div>
@@ -32,11 +32,11 @@
         <div class="stats-list" id="stats-list"></div>
       </div></div></div>
     </div>
-    <div class="tab-panel" id="panel-resources">
+    <div class="tab-panel" id="panel-resources" role="tabpanel" aria-labelledby="tab-resources">
       <div class="attempt-filter" id="attempt-filter"></div>
       <div class="res-list-container fade-up" id="res-list-container"></div>
     </div>
-    <div class="tab-panel" id="panel-summaries"><div class="summary-inline fade-up" id="summary-inline"></div></div>
+    <div class="tab-panel" id="panel-summaries" role="tabpanel" aria-labelledby="tab-summaries"><div class="summary-inline fade-up" id="summary-inline"></div></div>
   </div>
 </div></section>
 <div id="footer-root"></div>
@@ -71,15 +71,18 @@
   // Build tabs based on exam type
   const tabs = document.getElementById('subject-tabs');
   const isExternal = sub.examType === 'external';
-  let tabHTML = '<button class="tab-btn active" data-tab="overview">Overview</button>';
-  if (isExternal) {
-    tabHTML += '<button class="tab-btn" data-tab="midSem">Mid Sem</button>';
-    tabHTML += '<button class="tab-btn" data-tab="endSem">End Sem</button>';
+  function tabBtn(id, label, active) {
+    return `<button class="tab-btn${active?' active':''}" data-tab="${id}" role="tab" aria-selected="${active?'true':'false'}" aria-controls="panel-${id==='overview'?'overview':id==='summaries'?'summaries':'resources'}" id="tab-${id}">${label}</button>`;
   }
-  tabHTML += '<button class="tab-btn" data-tab="assignments">Assignments</button>';
-  tabHTML += '<button class="tab-btn" data-tab="notes">Notes</button>';
-  tabHTML += '<button class="tab-btn" data-tab="prepVideos">Prep Videos</button>';
-  tabHTML += '<button class="tab-btn" data-tab="summaries">Summary & Important Topics</button>';
+  let tabHTML = tabBtn('overview','Overview',true);
+  if (isExternal) {
+    tabHTML += tabBtn('midSem','Mid Sem',false);
+    tabHTML += tabBtn('endSem','End Sem',false);
+  }
+  tabHTML += tabBtn('assignments','Assignments',false);
+  tabHTML += tabBtn('notes','Notes',false);
+  tabHTML += tabBtn('prepVideos','Prep Videos',false);
+  tabHTML += tabBtn('summaries','Summary & Important Topics',false);
   // Inject counts into tab buttons after setting innerHTML
   tabs.innerHTML = tabHTML;
   tabs.querySelectorAll('.tab-btn').forEach(btn => {
@@ -164,7 +167,7 @@
   }
 
   function showTab(tabId) {
-    tabs.querySelectorAll('.tab-btn').forEach(t=>t.classList.toggle('active',t.dataset.tab===tabId));
+    tabs.querySelectorAll('.tab-btn').forEach(t=>{t.classList.toggle('active',t.dataset.tab===tabId);t.setAttribute('aria-selected',t.dataset.tab===tabId?'true':'false');});
     panelOverview.classList.toggle('active',tabId==='overview');
     panelSummaries.classList.toggle('active',tabId==='summaries');
     const isResTab = resTabs.includes(tabId);

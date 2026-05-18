@@ -1,3 +1,3 @@
 User-agent: *
 Allow: /
-Sitemap: https://ascend-archive.vercel.app/sitemap.xml
+Sitemap: https://ascendsupport.vercel.app/sitemap.xml

@@ -12,7 +12,7 @@
 <body>
 <div id="navbar-root"></div>
 
-<section class="explore-page">
+<section class="explore-page" id="main-content">
   <div class="container">
     <!-- Header -->
     <div class="explore-header fade-up">
@@ -41,15 +41,12 @@
       </div>
     </div>
 
-    <!-- Content toggle + Active filters -->
-    <div class="content-toggle-bar fade-up fade-up-delay-1">
-      <label class="content-toggle"><input type="checkbox" id="content-only-toggle"><span class="toggle-slider"></span> Show only resources with content</label>
-    </div>
+    <!-- Quick filters -->
     <div class="quick-filters fade-up fade-up-delay-1">
-      <button class="quick-filter-btn" data-qf="recent">📅 Recent Batch</button>
-      <button class="quick-filter-btn" data-qf="content">📄 Has Content</button>
-      <button class="quick-filter-btn" data-qf="endsem">📝 End Sem PYQs</button>
-      <button class="quick-filter-btn" data-qf="sem1">🎓 Semester 1</button>
+      <button class="quick-filter-btn" data-qf="recent">Recent Batch</button>
+      <button class="quick-filter-btn" data-qf="content">Has Content</button>
+      <button class="quick-filter-btn" data-qf="endsem">End Sem PYQs</button>
+      <button class="quick-filter-btn" data-qf="sem1">Semester 1</button>
     </div>
     <div class="active-filters" id="active-filters"></div>
     <div class="results-count fade-up fade-up-delay-1" id="results-count"></div>
@@ -120,6 +117,8 @@
   let sortBy = 'newest';
   let viewMode = 'list';
   let contentOnly = false;
+  const PAGE_SIZE = 30;
+  let visibleCount = PAGE_SIZE;
 
   // Populate filter options
   function checkbox(group, value, label) {
@@ -127,7 +126,7 @@
   }
 
   document.getElementById('fo-course').innerHTML = COURSES.map(c => checkbox('course', c.id, c.name)).join('');
-  document.getElementById('fo-batch').innerHTML = ['2025-27','2024-26','2023-25','2022-24'].map(b => checkbox('batch', b, b)).join('');
+  document.getElementById('fo-batch').innerHTML = [...new Set(allResources.map(r=>r.batch))].sort().reverse().map(b => checkbox('batch', b, b)).join('');
   document.getElementById('fo-semester').innerHTML = [1,2,3,4].map(s => checkbox('semester', s, `Semester ${s}`)).join('');
   document.getElementById('fo-type').innerHTML = ['midSem','endSem','assignments','notes','prepVideos','summaries'].map(t => checkbox('type', t, resTypeLabel(t))).join('');
   document.getElementById('fo-attempt').innerHTML = ['Main','Backlog'].map(a => checkbox('attempt', a, a)).join('');
@@ -171,13 +170,6 @@
     render();
   });
 
-  // Content-only toggle
-  document.getElementById('content-only-toggle').addEventListener('change', e => {
-    contentOnly = e.target.checked;
-    localStorage.setItem('ascend-content-only', e.target.checked);
-    render();
-  });
-
   // Mobile filter
   document.getElementById('mobile-filter-btn').addEventListener('click', () => {
     document.getElementById('filter-sidebar').classList.toggle('mobile-open');
@@ -208,20 +200,16 @@
   // Persist preferences (#10)
   const savedView = localStorage.getItem('ascend-explore-view');
   if (savedView) { viewMode = savedView; if (savedView === 'grid') { document.getElementById('explore-results').classList.add('grid-view'); document.getElementById('view-grid').classList.add('active'); document.getElementById('view-list').classList.remove('active'); } }
-  const savedContentOnly = localStorage.getItem('ascend-content-only');
-  if (savedContentOnly === 'true') { contentOnly = true; document.getElementById('content-only-toggle').checked = true; }
-
-  // Quick filters (#25)
+  // Quick filters
   document.querySelectorAll('.quick-filter-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       btn.classList.toggle('active');
       const qf = btn.dataset.qf;
       if (qf === 'recent') {
-        if (btn.classList.contains('active')) { filters.batch = ['2026-28']; document.querySelectorAll('.filter-checkbox input[data-group="batch"]').forEach(cb => cb.checked = cb.value === '2026-28'); }
+        if (btn.classList.contains('active')) { const batches = [...new Set(allResources.map(r=>r.batch))].sort().reverse(); const latest = batches[0]||'2024-26'; filters.batch = [latest]; document.querySelectorAll('.filter-checkbox input[data-group="batch"]').forEach(cb => cb.checked = cb.value === latest); }
         else { filters.batch = []; document.querySelectorAll('.filter-checkbox input[data-group="batch"]').forEach(cb => cb.checked = false); }
       } else if (qf === 'content') {
         contentOnly = btn.classList.contains('active');
-        document.getElementById('content-only-toggle').checked = contentOnly;
       } else if (qf === 'endsem') {
         if (btn.classList.contains('active')) { filters.type = ['endSem']; document.querySelectorAll('.filter-checkbox input[data-group="type"]').forEach(cb => cb.checked = cb.value === 'endSem'); }
         else { filters.type = []; document.querySelectorAll('.filter-checkbox input[data-group="type"]').forEach(cb => cb.checked = false); }
@@ -233,7 +221,8 @@
     });
   });
 
-  function render() {
+  function render(keepVisible) {
+    if (!keepVisible) visibleCount = PAGE_SIZE;
     let results = [...allResources];
 
     // Apply filters
@@ -286,7 +275,8 @@
       container.innerHTML = '<div class="empty-state"><p>No resources match your filters.</p><p>Try adjusting your filters or search query.</p><button class="btn-primary" style="margin-top:16px;font-size:13px;padding:10px 24px" onclick="document.getElementById(\'clear-all\').click()">Clear All Filters</button></div>';
       return;
     }
-    container.innerHTML = results.map(r => {
+    const visible = results.slice(0, visibleCount);
+    container.innerHTML = visible.map(r => {
       const courseName = getCourse(r.course)?.shortName || r.course;
       const isVid = r.resourceType === 'prepVideos';
       const href = isVid ? `video?course=${r.course}&sem=${r.semester}&sub=${r.subjectId}&id=${r.id}` : `resource?course=${r.course}&sem=${r.semester}&sub=${r.subjectId}&id=${r.id}`;
@@ -309,6 +299,18 @@
         <div class="explore-card-date">${r.date}</div>
       </a>`;
     }).join('');
+    // Load More button
+    const oldLoadMore = document.getElementById('load-more-btn');
+    if (oldLoadMore) oldLoadMore.remove();
+    if (results.length > visibleCount) {
+      const remaining = results.length - visibleCount;
+      const loadDiv = document.createElement('div');
+      loadDiv.id = 'load-more-btn';
+      loadDiv.style.cssText = 'text-align:center;padding:24px 0';
+      loadDiv.innerHTML = `<button class="btn-secondary" style="font-size:14px;padding:12px 32px;cursor:pointer">Load More (${remaining} remaining)</button>`;
+      container.after(loadDiv);
+      loadDiv.querySelector('button').addEventListener('click', function() { visibleCount += PAGE_SIZE; render(true); });
+    }
   }
 
   render();

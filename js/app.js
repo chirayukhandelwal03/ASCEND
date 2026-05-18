@@ -3,11 +3,21 @@ const GOOGLE_FORM_URL = "contribute";
 const LOGO_TOP = `<img src="New_Logo_Top.png" alt="ASCEND" height="42" style="height:42px;width:auto;object-fit:contain">`;
 const LOGO_BOTTOM = `<img src="New_Logo_Bottom.png" alt="ASCEND" height="38" style="height:38px;width:auto;object-fit:contain">`;
 
-// ===== 6.1 Favicon injection =====
+// ===== 6.1 Favicon + preconnect + canonical injection =====
 (function(){
   const link = document.createElement('link');
   link.rel = 'icon'; link.type = 'image/png'; link.href = 'New_Logo_Top.png';
   document.head.appendChild(link);
+  // Preconnect hints
+  ['https://fonts.googleapis.com','https://fonts.gstatic.com','https://drive.google.com'].forEach(href => {
+    const pc = document.createElement('link');
+    pc.rel = 'preconnect'; pc.href = href; pc.crossOrigin = '';
+    document.head.appendChild(pc);
+  });
+  // Canonical URL
+  const canon = document.createElement('link');
+  canon.rel = 'canonical'; canon.href = window.location.origin + window.location.pathname.replace(/\.html$/,'').replace(/\/index$/,'/');
+  document.head.appendChild(canon);
 })();
 
 // ===== 7.1 Dark Mode =====
@@ -38,6 +48,7 @@ function createNavbar(active) {
     return `<li><a href="${l.href}"${cls}${ext}>${l.label}</a></li>`;
   }).join('');
   document.getElementById('navbar-root').innerHTML = `
+    <a href="#main-content" class="skip-to-content">Skip to content</a>
     <nav class="navbar" id="navbar"><div class="container">
       <a href="index.html" class="nav-logo"><div class="nav-logo-icon">${LOGO_TOP}</div></a>
       <div class="nav-search" id="nav-search">
@@ -127,7 +138,7 @@ function createFooter() {
         <p class="footer-cta-desc">Contribute resources and help future batches ascend.</p>
         <a href="${GOOGLE_FORM_URL}" class="footer-cta-btn">Contribute Now
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a></div></div>
-    </div><div class="footer-bottom"><span>&copy; 2025 ASCEND. All rights reserved.</span>
+    </div><div class="footer-bottom"><span>&copy; ${new Date().getFullYear()} ASCEND. All rights reserved.</span>
       <div class="footer-bottom-right">Made with purpose. Built for legacy.</div></div></div></footer>`;
   // 4.5 Back to Top button
   const btt = document.createElement('button');
@@ -228,6 +239,14 @@ function initPage() {
   document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
   // 3.1 FOUC prevention
   document.body.classList.add('page-loaded');
+  // Service worker registration
+  if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js').catch(()=>{}); }
+  // JSON-LD structured data
+  if (!document.querySelector('script[type="application/ld+json"]')) {
+    const ld = document.createElement('script'); ld.type = 'application/ld+json';
+    ld.textContent = JSON.stringify({"@context":"https://schema.org","@type":"WebSite","name":"ASCEND","url":window.location.origin,"description":"Academic Support & Curriculum Excellence Network Database — a centralized archive of academic resources built by students, for future batches.","potentialAction":{"@type":"SearchAction","target":window.location.origin+"/explore?search={search_term_string}","query-input":"required name=search_term_string"}});
+    document.head.appendChild(ld);
+  }
 }
 
 // ===== Constants =====
