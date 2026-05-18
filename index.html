@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#1B2A4A">
   <title>ASCEND — Academic Support & Curriculum Excellence Network Database</title>
   <meta name="description" content="A centralized archive of academic resources, preparation guidance, notes, assignments, summaries, PYQs and senior insights — built by students, for future batches.">
   <!-- 6.3 OG Meta -->
@@ -44,7 +45,7 @@
       </div>
     </div>
     <div class="hero-image fade-up fade-up-delay-2">
-      <img src="hero-desk.png" alt="Academic desk scene with business textbooks, notebook and pen in warm sunlight" loading="eager">
+      <picture><source srcset="hero-desk.webp" type="image/webp"><img src="hero-desk.png" alt="Academic desk scene with business textbooks, notebook and pen in warm sunlight" loading="eager"></picture>
     </div>
   </div>
 </section>
@@ -122,7 +123,7 @@
       <div class="fade-up">
         <div class="resources-header">
           <h3>Latest Uploads</h3>
-          <a href="explore.html">View All →</a>
+          <a href="explore">View All →</a>
         </div>
         <div class="resource-list" id="dynamic-resource-list">
           <!-- Populated by JS -->
@@ -130,7 +131,7 @@
       </div>
       <!-- 5.2 Live stats sidebar -->
       <div class="resources-quote fade-up fade-up-delay-2">
-        <img src="legacy-art.png" alt="Students walking towards a library" class="resources-quote-img" loading="lazy">
+        <picture><source srcset="legacy-art.webp" type="image/webp"><img src="legacy-art.png" alt="Students walking towards a library" class="resources-quote-img" loading="lazy"></picture>
         <div class="resources-stats-grid" id="live-stats"></div>
         <p class="resources-quote-highlight" style="margin-top:20px;font-size:14px;">
           Real resources. Real experiences.<br>From those who've been there.
@@ -143,7 +144,7 @@
 <!-- ===== LEGACY / ABOUT (1.2 — rewritten) ===== -->
 <section class="legacy" id="legacy">
   <div class="container">
-    <img src="legacy-art.png" alt="Students walking toward knowledge" class="legacy-art fade-up" loading="lazy">
+    <picture><source srcset="legacy-art.webp" type="image/webp"><img src="legacy-art.png" alt="Students walking toward knowledge" class="legacy-art fade-up" loading="lazy"></picture>
     <h2 class="legacy-title fade-up fade-up-delay-1" style="font-family:'Playfair Display',serif;font-size:28px;margin-bottom:16px;color:var(--navy);">The ASCEND Mission</h2>
     <p class="legacy-quote fade-up fade-up-delay-1">
       Every semester, students face the same questions: <em>What to study? Where to find resources? How did seniors prepare?</em>
@@ -220,7 +221,7 @@
       <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--gray-300)" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
       <p class="empty-state-text">Resources coming soon — be the first to contribute!</p></div>`;
   } else {
-    allResWithContent.sort((a,b) => new Date(b.date) - new Date(a.date)).slice(0,5).forEach((r,i) => {
+    allResWithContent.sort((a,b) => b.batch.localeCompare(a.batch) || a.title.localeCompare(b.title)).slice(0,5).forEach((r,i) => {
       resList.innerHTML += `<a href="resource?course=${r.course}&sem=${r.semester}&sub=${r.subjectId}&id=${r.id}" class="resource-item" id="res-${i+1}">
         <div class="resource-info">
           <div class="resource-type-icon ${resTypeClass(r.resourceType)}">${resTypeShort(r.resourceType)}</div>
@@ -270,6 +271,19 @@
     });
   }, {threshold: 0.3});
   counterObs.observe(document.getElementById('trust-grid'));
+
+  // Recently Viewed
+  const recent = getRecentlyViewed();
+  if (recent.length > 0) {
+    const recentHtml = recent.slice(0,3).map(r =>
+      `<a href="resource?course=${r.course}&sem=${r.sem}&sub=${r.sub}&id=${r.id}" class="resource-item">
+        <div class="resource-info"><div class="resource-details">
+          <div class="resource-title">${r.title}</div>
+          <div class="resource-meta"><span>${r.type}</span> <span>•</span> <span>${r.fileType}</span></div>
+        </div></div></a>`
+    ).join('');
+    resList.insertAdjacentHTML('beforebegin', `<div style="margin-bottom:24px"><h3 style="font-size:15px;font-weight:600;color:var(--heading);margin-bottom:12px">Recently Viewed</h3>${recentHtml}</div>`);
+  }
 
   // Resource item hover
   document.querySelectorAll('.resource-item').forEach(item => {

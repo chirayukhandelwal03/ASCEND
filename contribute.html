@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#1B2A4A">
   <title>Contribute — ASCEND</title>
   <meta name="description" content="Share your notes, PYQs, assignments and resources to help future batches.">
   <link rel="stylesheet" href="style.css"><link rel="stylesheet" href="pages.css">
@@ -43,6 +44,7 @@
     <div class="contribute-header fade-up">
       <h1 class="contribute-title">Contribute Resources</h1>
       <p class="contribute-subtitle">Share your notes, PYQs, assignments and other academic resources. Every contribution builds a stronger legacy for future batches.</p>
+      <div class="contribute-counter fade-up" style="margin-top:12px"><span id="contrib-count" style="font-size:28px;font-weight:700;color:var(--gold)"></span><span style="color:var(--text-muted);font-size:14px;margin-left:8px">resources contributed so far</span></div>
     </div>
     <div class="contribute-form-wrapper fade-up fade-up-delay-1">
       <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdcsTqpvWs6N8jf_OoG-Mi8jP8NioDKekpo4WvZq9u7cqVPtA/viewform?embedded=true" frameborder="0" marginheight="0" marginwidth="0" loading="lazy">Loading form...</iframe>
@@ -66,6 +68,7 @@
 
 <div id="footer-root"></div>
 <script src="js/data.js"></script><script src="js/app.js"></script>
-<script>createNavbar('contribute'); createFooter(); initPage();</script>
+<script>createNavbar('contribute'); createFooter(); initPage();
+document.getElementById('contrib-count').textContent = getAllResources({onlyWithContent:true}).length;</script>
 </body>
 </html>

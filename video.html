@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#1B2A4A">
   <title>Prep Video — ASCEND</title>
   <meta name="description" content="Watch preparation video resource.">
   <link rel="stylesheet" href="style.css"><link rel="stylesheet" href="pages.css"><link rel="stylesheet" href="explore.css">
@@ -49,6 +50,25 @@
   const details=[{l:'Author',v:res.uploadedBy},{l:'Course',v:course.name},{l:'Batch',v:res.batch},{l:'Duration',v:res.duration||'N/A'},{l:'Views',v:res.views.toLocaleString()}];
   document.getElementById('vid-details').innerHTML=details.map(d=>`<div class="detail-row"><span class="detail-label">${d.l}</span><span class="detail-value">${d.v}</span></div>`).join('');
   document.getElementById('topic-tags').innerHTML=(res.topics||[]).map(t=>`<span class="topic-tag">${t}</span>`).join('');
+  // Wire up YouTube if driveLink exists (will be a YouTube URL for videos)
+  const playBtn = document.querySelector('.video-play-btn');
+  const youtubeBtn = document.querySelector('.btn-youtube');
+  if (res.driveLink && res.driveLink.includes('youtu')) {
+    const videoId = res.driveLink.match(/(?:youtu\.be\/|v=)([^&]+)/)?.[1];
+    if (videoId) {
+      playBtn.addEventListener('click', () => {
+        const player = document.querySelector('.video-player');
+        player.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${videoId}?autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen style="aspect-ratio:16/9;border-radius:12px"></iframe>`;
+      });
+      youtubeBtn.href = `https://www.youtube.com/watch?v=${videoId}`;
+    }
+  } else {
+    playBtn.style.display = 'none';
+    youtubeBtn.href = 'contribute';
+    youtubeBtn.textContent = 'No video yet — Contribute one';
+    youtubeBtn.classList.remove('btn-youtube');
+    youtubeBtn.classList.add('btn-secondary');
+  }
   document.getElementById('share-btn').addEventListener('click',()=>{if(navigator.share)navigator.share({title:res.title,url:window.location.href});else{navigator.clipboard.writeText(window.location.href);alert('Link copied!')}});
   initPage();
 })();

@@ -246,3 +246,10 @@
 .content-toggle input:checked+.toggle-slider::after{transform:translateX(16px)}
 [data-theme="dark"] .toggle-slider{background:#30363D}
 [data-theme="dark"] .content-toggle input:checked+.toggle-slider{background:var(--gold)}
+
+/* Quick filters */
+.quick-filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.quick-filter-btn{padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:var(--card-bg);color:var(--text);font-size:13px;cursor:pointer;transition:all 0.2s}
+.quick-filter-btn:hover{border-color:var(--gold)}
+.quick-filter-btn.active{background:var(--gold);color:white;border-color:var(--gold)}
+[data-theme="dark"] .quick-filter-btn.active{color:var(--navy)}

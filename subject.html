@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#1B2A4A">
   <title>Subject — ASCEND</title>
   <meta name="description" content="All resources for this subject.">
   <link rel="stylesheet" href="style.css"><link rel="stylesheet" href="pages.css"><link rel="stylesheet" href="explore.css">
@@ -47,6 +48,7 @@
   if (!course||!sem||!sub) { window.location.href = `semester?course=${courseId}&id=${semId}`; return; }
 
   document.title = `${sub.name} — ASCEND`;
+  document.querySelector('meta[property="og:title"]')?.setAttribute('content', `${sub.name} — ASCEND`);
   createNavbar('courses'); createFooter();
   document.getElementById('breadcrumb-root').innerHTML = createBreadcrumb([
     {label:'Home',href:'index.html'},{label:'Courses',href:'courses.html'},
@@ -63,6 +65,9 @@
     <span class="subject-sem-tag">CA: ${sub.ca} | TEE: ${sub.tee}</span>
     <span class="subject-sem-tag ${sub.examType}">${sub.tee===0 ? 'Fully Internal' : 'External'}</span>`;
 
+  // Top resources & tabs logic
+  const allRes = RESOURCES[subId];
+
   // Build tabs based on exam type
   const tabs = document.getElementById('subject-tabs');
   const isExternal = sub.examType === 'external';
@@ -75,7 +80,24 @@
   tabHTML += '<button class="tab-btn" data-tab="notes">Notes</button>';
   tabHTML += '<button class="tab-btn" data-tab="prepVideos">Prep Videos</button>';
   tabHTML += '<button class="tab-btn" data-tab="summaries">Summary & Important Topics</button>';
+  // Inject counts into tab buttons after setting innerHTML
   tabs.innerHTML = tabHTML;
+  tabs.querySelectorAll('.tab-btn').forEach(btn => {
+    const tab = btn.dataset.tab;
+    if (tab !== 'overview' && tab !== 'summaries' && allRes && allRes[tab]) {
+      const count = allRes[tab].length;
+      if (count > 0) btn.innerHTML += ` <span class="tab-count">${count}</span>`;
+    }
+  });
+
+  // Exam pattern breakdown
+  const patternEl = document.createElement('div');
+  patternEl.className = 'exam-pattern fade-up';
+  patternEl.innerHTML = `<div class="exam-pattern-bar">
+    <div class="ep-segment ep-ca" style="flex:${sub.ca}"><span>CA ${sub.ca}</span></div>
+    <div class="ep-segment ep-tee" style="flex:${sub.tee}"><span>TEE ${sub.tee}</span></div>
+  </div><div class="exam-pattern-label">Total: ${sub.maxMarks} Marks · ${sub.credits} Credit${sub.credits>1?'s':''}</div>`;
+  document.querySelector('.subject-header').after(patternEl);
 
   // Stats
   const statsEl = document.getElementById('stats-list');
@@ -90,8 +112,6 @@
   if (!sub.specializations.includes('all')) info.push({l:'Specialization',v:sub.specializations.map(s=>s.toUpperCase()).join(', ')});
   statsEl.innerHTML = info.map(d=>`<div class="stat-row"><span>${d.l}</span><span class="stat-val">${d.v}</span></div>`).join('');
 
-  // Top resources & tabs logic
-  const allRes = RESOURCES[subId];
   const topRes = document.getElementById('top-res-list');
   if (allRes) {
     const topItems = [];

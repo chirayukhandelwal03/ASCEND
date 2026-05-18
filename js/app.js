@@ -50,6 +50,7 @@ function createNavbar(active) {
         <li><button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode"></button></li>
         <li><a href="explore.html" class="nav-cta">Explore Resources</a></li>
       </ul>
+      <button class="mobile-search-btn" id="mobile-search-btn" aria-label="Search"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></button>
       <button class="nav-hamburger" id="nav-hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
     </div></nav>`;
   // Dark mode toggle
@@ -97,6 +98,9 @@ function initSearch(){
         results.innerHTML = '<div class="search-empty">No results found</div>';
       } else {
         results.innerHTML = limited.map(h => `<a href="${h.href}" class="search-result-item"><span class="search-result-type">${h.type}</span><div><div class="search-result-label">${h.label}</div><div class="search-result-desc">${h.desc}</div></div></a>`).join('');
+      }
+      if (hits.length > 8) {
+        results.innerHTML += `<a href="explore?search=${encodeURIComponent(q)}" class="search-view-all" style="display:block;padding:10px 16px;text-align:center;font-size:13px;color:var(--gold);border-top:1px solid var(--border);">View all ${hits.length} results →</a>`;
       }
       results.classList.add('active');
     }, 200);
@@ -187,6 +191,14 @@ function initPage() {
       }
     });
   }
+  // Mobile search button
+  const mobileSearchBtn = document.getElementById('mobile-search-btn');
+  if (mobileSearchBtn) {
+    mobileSearchBtn.addEventListener('click', () => {
+      const searchWrap = document.querySelector('.nav-search');
+      if (searchWrap) { searchWrap.classList.toggle('mobile-search-open'); searchWrap.querySelector('input')?.focus(); }
+    });
+  }
   // 4.4 Keyboard navigation: Ctrl+K focuses search
   document.addEventListener('keydown', e => {
     if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
@@ -228,6 +240,18 @@ const SEM_ICONS = {
 function resTypeLabel(t){return{midSem:'Mid Sem',endSem:'End Sem',assignments:'Assignment',notes:'Notes',prepVideos:'Prep Video',summaries:'Summary'}[t]||t}
 function resTypeShort(t){return{midSem:'MID',endSem:'PYQ',assignments:'ASG',notes:'NOTE',prepVideos:'VID',summaries:'SUM'}[t]||t}
 function resTypeClass(t){return{midSem:'midsem',endSem:'pyq',assignments:'assignment',notes:'notes',prepVideos:'video',summaries:'summary'}[t]||''}
+
+// Recently viewed
+function addToRecentlyViewed(item) {
+  let recent = JSON.parse(localStorage.getItem('ascend-recent') || '[]');
+  recent = recent.filter(r => r.id !== item.id);
+  recent.unshift(item);
+  if (recent.length > 10) recent = recent.slice(0, 10);
+  localStorage.setItem('ascend-recent', JSON.stringify(recent));
+}
+function getRecentlyViewed() {
+  return JSON.parse(localStorage.getItem('ascend-recent') || '[]');
+}
 
 const COURSE_ICONS = {
   core:`<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>`,

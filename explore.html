@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#1B2A4A">
   <title>Explore Resources — ASCEND</title>
   <meta name="description" content="Browse, search, filter and sort all academic resources across courses, semesters and subjects.">
   <link rel="stylesheet" href="style.css"><link rel="stylesheet" href="pages.css"><link rel="stylesheet" href="explore.css">
@@ -23,7 +24,7 @@
     <div class="explore-toolbar fade-up fade-up-delay-1">
       <div class="explore-search">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input type="text" id="explore-search" placeholder="Search by title, subject, or keyword..." autocomplete="off">
+        <input type="text" id="explore-search" placeholder="Search by title, subject, or keyword…    (Press /)" autocomplete="off">
       </div>
       <div class="explore-controls">
         <select id="explore-sort" class="explore-select">
@@ -43,6 +44,12 @@
     <!-- Content toggle + Active filters -->
     <div class="content-toggle-bar fade-up fade-up-delay-1">
       <label class="content-toggle"><input type="checkbox" id="content-only-toggle"><span class="toggle-slider"></span> Show only resources with content</label>
+    </div>
+    <div class="quick-filters fade-up fade-up-delay-1">
+      <button class="quick-filter-btn" data-qf="recent">📅 Recent Batch</button>
+      <button class="quick-filter-btn" data-qf="content">📄 Has Content</button>
+      <button class="quick-filter-btn" data-qf="endsem">📝 End Sem PYQs</button>
+      <button class="quick-filter-btn" data-qf="sem1">🎓 Semester 1</button>
     </div>
     <div class="active-filters" id="active-filters"></div>
     <div class="results-count fade-up fade-up-delay-1" id="results-count"></div>
@@ -152,8 +159,8 @@
   document.getElementById('explore-sort').addEventListener('change', e => { sortBy = e.target.value; render(); });
 
   // View toggle
-  document.getElementById('view-list').addEventListener('click', () => { viewMode='list'; document.getElementById('explore-results').classList.remove('grid-view'); document.getElementById('view-list').classList.add('active'); document.getElementById('view-grid').classList.remove('active'); });
-  document.getElementById('view-grid').addEventListener('click', () => { viewMode='grid'; document.getElementById('explore-results').classList.add('grid-view'); document.getElementById('view-grid').classList.add('active'); document.getElementById('view-list').classList.remove('active'); });
+  document.getElementById('view-list').addEventListener('click', () => { viewMode='list'; document.getElementById('explore-results').classList.remove('grid-view'); document.getElementById('view-list').classList.add('active'); document.getElementById('view-grid').classList.remove('active'); localStorage.setItem('ascend-explore-view','list'); });
+  document.getElementById('view-grid').addEventListener('click', () => { viewMode='grid'; document.getElementById('explore-results').classList.add('grid-view'); document.getElementById('view-grid').classList.add('active'); document.getElementById('view-list').classList.remove('active'); localStorage.setItem('ascend-explore-view','grid'); });
 
   // Clear all
   document.getElementById('clear-all').addEventListener('click', () => {
@@ -167,6 +174,7 @@
   // Content-only toggle
   document.getElementById('content-only-toggle').addEventListener('change', e => {
     contentOnly = e.target.checked;
+    localStorage.setItem('ascend-content-only', e.target.checked);
     render();
   });
 
@@ -190,6 +198,40 @@
     });
   }
   readURL();
+
+  // Read search from URL (#5)
+  (function(){
+    const p = new URLSearchParams(window.location.search);
+    if (p.get('search')) { searchQuery = p.get('search').toLowerCase(); document.getElementById('explore-search').value = p.get('search'); }
+  })();
+
+  // Persist preferences (#10)
+  const savedView = localStorage.getItem('ascend-explore-view');
+  if (savedView) { viewMode = savedView; if (savedView === 'grid') { document.getElementById('explore-results').classList.add('grid-view'); document.getElementById('view-grid').classList.add('active'); document.getElementById('view-list').classList.remove('active'); } }
+  const savedContentOnly = localStorage.getItem('ascend-content-only');
+  if (savedContentOnly === 'true') { contentOnly = true; document.getElementById('content-only-toggle').checked = true; }
+
+  // Quick filters (#25)
+  document.querySelectorAll('.quick-filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      btn.classList.toggle('active');
+      const qf = btn.dataset.qf;
+      if (qf === 'recent') {
+        if (btn.classList.contains('active')) { filters.batch = ['2026-28']; document.querySelectorAll('.filter-checkbox input[data-group="batch"]').forEach(cb => cb.checked = cb.value === '2026-28'); }
+        else { filters.batch = []; document.querySelectorAll('.filter-checkbox input[data-group="batch"]').forEach(cb => cb.checked = false); }
+      } else if (qf === 'content') {
+        contentOnly = btn.classList.contains('active');
+        document.getElementById('content-only-toggle').checked = contentOnly;
+      } else if (qf === 'endsem') {
+        if (btn.classList.contains('active')) { filters.type = ['endSem']; document.querySelectorAll('.filter-checkbox input[data-group="type"]').forEach(cb => cb.checked = cb.value === 'endSem'); }
+        else { filters.type = []; document.querySelectorAll('.filter-checkbox input[data-group="type"]').forEach(cb => cb.checked = false); }
+      } else if (qf === 'sem1') {
+        if (btn.classList.contains('active')) { filters.semester = ['1']; document.querySelectorAll('.filter-checkbox input[data-group="semester"]').forEach(cb => cb.checked = cb.value === '1'); }
+        else { filters.semester = []; document.querySelectorAll('.filter-checkbox input[data-group="semester"]').forEach(cb => cb.checked = false); }
+      }
+      render();
+    });
+  });
 
   function render() {
     let results = [...allResources];
@@ -241,7 +283,7 @@
     // Render results
     const container = document.getElementById('explore-results');
     if (!results.length) {
-      container.innerHTML = '<div class="empty-state"><p>No resources match your filters.</p><p>Try adjusting your filters or search query.</p></div>';
+      container.innerHTML = '<div class="empty-state"><p>No resources match your filters.</p><p>Try adjusting your filters or search query.</p><button class="btn-primary" style="margin-top:16px;font-size:13px;padding:10px 24px" onclick="document.getElementById(\'clear-all\').click()">Clear All Filters</button></div>';
       return;
     }
     container.innerHTML = results.map(r => {

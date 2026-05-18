@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#1B2A4A">
   <title>Resource — ASCEND</title>
   <meta name="description" content="View and download academic resource.">
   <link rel="stylesheet" href="style.css"><link rel="stylesheet" href="pages.css"><link rel="stylesheet" href="explore.css">
@@ -41,6 +42,7 @@
   const course=getCourse(courseId),sem=getSemester(courseId,semId),sub=getSubject(courseId,semId,subId),res=resId?getResource(subId,resId):null;
   if(!course||!sem||!sub||!res){window.location.href=`subject?course=${courseId}&sem=${semId}&sub=${subId}`;return}
   document.title=`${res.title} — ASCEND`;
+  document.querySelector('meta[property="og:title"]')?.setAttribute('content', `${res.title} — ASCEND`);
   createNavbar('courses');createFooter();
   let resCat='End Sem';const allRes=RESOURCES[subId];if(allRes){for(const[cat,items]of Object.entries(allRes)){if(items.find(r=>r.id===resId)){resCat=resTypeLabel(cat);break}}}
   document.getElementById('breadcrumb-root').innerHTML=createBreadcrumb([{label:'Home',href:'index.html'},{label:'Courses',href:'courses.html'},{label:course.name,href:`semesters?course=${courseId}`},{label:sem.name,href:`semester?course=${courseId}&id=${semId}`},{label:sub.name,href:`subject?course=${courseId}&sem=${semId}&sub=${subId}`},{label:resCat}]);
@@ -88,6 +90,7 @@
   document.getElementById('subject-link').href=`subject?course=${courseId}&sem=${semId}&sub=${subId}`;
   document.getElementById('report-btn').addEventListener('click',()=>alert('Thank you for reporting.'));
   initPage();
+  addToRecentlyViewed({id:resId, title:res.title, course:courseId, sem:semId, sub:subId, type:resCat, fileType:res.fileType});
 })();
 </script>
 </body>
