@@ -469,29 +469,25 @@ COURSES.forEach(course => {
 // ── Wire up available PDFs ──
 // Each entry: [subjectId, resourceId, relativePath]
 const PDF_MAP = [
-  // MBA Core — Sem I — End Sem — 2024-26 Backlog
-  ["business-communication","business-communication-end-backlog-2024-26","ASCEND Resources/MBA Core/MBA Core - Sem I/MBA Core - Sem I -  End Sem - 2024-26 Back Papers/MBA Core - Sem I - Business Communication - End Sem - Backlog - 2024-26.pdf"],
-  ["business-statistics","business-statistics-end-backlog-2024-26","ASCEND Resources/MBA Core/MBA Core - Sem I/MBA Core - Sem I -  End Sem - 2024-26 Back Papers/MBA Core - Sem I - Business Statistics - End Sem - Backlog - 2024-26.pdf"],
-  ["essentials-marketing","essentials-marketing-end-backlog-2024-26","ASCEND Resources/MBA Core/MBA Core - Sem I/MBA Core - Sem I -  End Sem - 2024-26 Back Papers/MBA Core - Sem I - Essentials of Marketing Management - End Sem - Backlog - 2024-26.pdf"],
-  ["financial-accounting","financial-accounting-end-backlog-2024-26","ASCEND Resources/MBA Core/MBA Core - Sem I/MBA Core - Sem I -  End Sem - 2024-26 Back Papers/MBA Core - Sem I - Financial Accounting - End Sem - Backlog - 2024-26.pdf"],
-  ["hrm","hrm-end-backlog-2024-26","ASCEND Resources/MBA Core/MBA Core - Sem I/MBA Core - Sem I -  End Sem - 2024-26 Back Papers/MBA Core - Sem I - Human Resource Management - End Sem - Backlog - 2024-26.pdf"],
-  ["intro-financial-mgmt","intro-financial-mgmt-end-backlog-2024-26","ASCEND Resources/MBA Core/MBA Core - Sem I/MBA Core - Sem I -  End Sem - 2024-26 Back Papers/MBA Core - Sem I - Introduction to Financial Management - End Sem - Backlog - 2024-26.pdf"],
-  ["operations-research","operations-research-end-backlog-2024-26","ASCEND Resources/MBA Core/MBA Core - Sem I/MBA Core - Sem I -  End Sem - 2024-26 Back Papers/MBA Core - Sem I - Operations Research - End Sem - Backlog - 2024-26.pdf"],
-  ["organizational-behaviour","organizational-behaviour-end-backlog-2024-26","ASCEND Resources/MBA Core/MBA Core - Sem I/MBA Core - Sem I -  End Sem - 2024-26 Back Papers/MBA Core - Sem I - Organizational Behaviour - End Sem - Backlog - 2024-26.pdf"],
-  ["research-methodology","research-methodology-end-backlog-2024-26","ASCEND Resources/MBA Core/MBA Core - Sem I/MBA Core - Sem I -  End Sem - 2024-26 Back Papers/MBA Core - Sem I - Research Methodology - End Sem - Backlog - 2024-26.pdf"],
-  // MBA Core — Sem I — End Sem — 2023-25 Backlog
-  ["intro-financial-mgmt","intro-financial-mgmt-end-backlog-2023-25","ASCEND Resources/MBA Core/MBA Core - Sem I/MBA Core - Sem I -  End Sem - 2023-25 Back Papers/MBA Core - Sem I - Introduction to Financial Management - End Sem - Backlog - 2023-25.pdf"],
-  // MBA BA — Sem I — End Sem — 2024-26 Backlog
-  ["ba-business-stats","ba-business-stats-end-backlog-2024-26","ASCEND Resources/MBA BA/MBA BA - Sem I/MBA BA - Sem I -  End Sem - 2024-26 Back Papers/MBA BA - Sem I - Business Statistics - End Sem - Backlog - 2024-26.pdf"],
-  ["ba-essentials-marketing","ba-essentials-marketing-end-backlog-2024-26","ASCEND Resources/MBA BA/MBA BA - Sem I/MBA BA - Sem I -  End Sem - 2024-26 Back Papers/MBA BA - Sem I - Essentials of Marketing Management - End Sem - Backlog - 2024-26.pdf"],
-  ["ba-quant-methods","ba-quant-methods-end-backlog-2024-26","ASCEND Resources/MBA BA/MBA BA - Sem I/MBA BA - Sem I -  End Sem - 2024-26 Back Papers/MBA BA - Sem I - Quantitative Methods - End Sem - Backlog - 2024-26.pdf"],
-  ["ba-financial-accounting","ba-financial-accounting-end-backlog-2024-26","ASCEND Resources/MBA BA/MBA BA - Sem I/MBA BA - Sem I -  End Sem - 2024-26 Back Papers/MBA Core - Sem I - Financial Accounting - End Sem - Backlog - 2024-26.pdf"],
-  // MBA IDM — Sem I — End Sem — 2024-26 Backlog
-  ["idm-business-comm","idm-business-comm-end-backlog-2024-26","ASCEND Resources/MBA IDM/MBA IDM - Sem I/MBA IDM - Sem I -  End Sem - 2024-26 Back Papers/MBA IDM - Sem I - Business Communication - End Sem - Backlog - 2024-26.pdf"],
-  ["idm-business-stats","idm-business-stats-end-backlog-2024-26","ASCEND Resources/MBA IDM/MBA IDM - Sem I/MBA IDM - Sem I -  End Sem - 2024-26 Back Papers/MBA IDM - Sem I - Business Statistics - End Sem - Backlog - 2024-26.pdf"],
-  ["idm-mgmt-accounting","idm-mgmt-accounting-end-backlog-2024-26","ASCEND Resources/MBA IDM/MBA IDM - Sem I/MBA IDM - Sem I -  End Sem - 2024-26 Back Papers/MBA IDM - Sem I - Management Accounting - End Sem - Backlog - 2024-26.pdf"],
-  ["idm-org-behaviour","idm-org-behaviour-end-backlog-2024-26","ASCEND Resources/MBA IDM/MBA IDM - Sem I/MBA IDM - Sem I -  End Sem - 2024-26 Back Papers/MBA IDM - Sem I - Organizational Behaviour - End Sem - Backlog - 2024-26.pdf"],
-  ["idm-roads-highways","idm-roads-highways-end-backlog-2024-26","ASCEND Resources/MBA IDM/MBA IDM - Sem I/MBA IDM - Sem I -  End Sem - 2024-26 Back Papers/MBA IDM - Sem I - Roads, Highways and Bridges - End Sem - Backlog - 2024-26.pdf"]
+  ["idm-roads-highways","idm-roads-highways-end-backlog-2024-26","https://drive.google.com/file/d/1NNC5lwCPwNiEOKAcnU14nVwpjsFv9OCx/preview"],
+  ["idm-business-comm","idm-business-comm-end-backlog-2024-26","https://drive.google.com/file/d/1URY--olktlCR1T_r5_oEjuhpyGhM65xn/preview"],
+  ["idm-mgmt-accounting","idm-mgmt-accounting-end-backlog-2024-26","https://drive.google.com/file/d/1jvfAPF2PdaQieIkJmElCIwkRyEDB1JSy/preview"],
+  ["idm-business-stats","idm-business-stats-end-backlog-2024-26","https://drive.google.com/file/d/1RZMdSpa6_cOUUwaZSo80K-WhWh3ztvzX/preview"],
+  ["idm-org-behaviour","idm-org-behaviour-end-backlog-2024-26","https://drive.google.com/file/d/1RHR7d8EXcG8pr_Sl6V-h3jgwi81vbRSg/preview"],
+  ["ba-quant-methods","ba-quant-methods-end-backlog-2024-26","https://drive.google.com/file/d/1gwfBVbQG18uQyGyT2lkilQhHGFxt35Dz/preview"],
+  ["ba-business-stats","ba-business-stats-end-backlog-2024-26","https://drive.google.com/file/d/1MAa8wKYERMSqbnxsS5gCDYVGaD0F7Ekl/preview"],
+  ["financial-accounting","financial-accounting-end-backlog-2024-26","https://drive.google.com/file/d/1a-OngoMakG1GRcuqVPBemV99T5-LhUF9/preview"],
+  ["ba-essentials-marketing","ba-essentials-marketing-end-backlog-2024-26","https://drive.google.com/file/d/17XoHVWiWmSaVQ6q7kyjaX2Y-hyN6oJSD/preview"],
+  ["intro-financial-mgmt","intro-financial-mgmt-end-backlog-2023-25","https://drive.google.com/file/d/1f17tJuB81EuWod_9xJQXRQ2PIROiyGFT/preview"],
+  ["hrm","hrm-end-backlog-2024-26","https://drive.google.com/file/d/11y6OsfKjbxpdHC5HGShDxXcHCN67aXBB/preview"],
+  ["intro-financial-mgmt","intro-financial-mgmt-end-backlog-2024-26","https://drive.google.com/file/d/1H0sDRpNClVnZ9rZFoC_15s14r_EE0JAt/preview"],
+  ["research-methodology","research-methodology-end-backlog-2024-26","https://drive.google.com/file/d/1ETajGJAjzjmVAi2dQXwRcWj-OcQ3KGWR/preview"],
+  ["essentials-marketing","essentials-marketing-end-backlog-2024-26","https://drive.google.com/file/d/1nfMORpgmH1UUz8hShOVBDSm6lwe2BO3R/preview"],
+  ["operations-research","operations-research-end-backlog-2024-26","https://drive.google.com/file/d/17X5E6vDCXL5XmzyV2r7YWpC9-mqNK9Sn/preview"],
+  ["business-communication","business-communication-end-backlog-2024-26","https://drive.google.com/file/d/1XrvASSSwH3KeiFTmBMr87g-PtS_RfsP7/preview"],
+  ["business-statistics","business-statistics-end-backlog-2024-26","https://drive.google.com/file/d/1WZp82XdkltWYflEbCd_1b2GxI44n1wXe/preview"],
+  ["organizational-behaviour","organizational-behaviour-end-backlog-2024-26","https://drive.google.com/file/d/1oL8NHfIvQNG5HHX7PbO55vV9YQQaalkY/preview"],
+  ["financial-accounting","financial-accounting-end-backlog-2024-26","https://drive.google.com/file/d/1-2LhXdHdrL-gX5cEeISpt6_0v6B13OXP/preview"]
 ];
 PDF_MAP.forEach(([subId, resId, path]) => {
   const res = getResource(subId, resId);
